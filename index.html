@@ -6,93 +6,91 @@
     <title>Mithril Sport - Магазин спортивного оборудования</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; }
         
         header {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
             padding: 1rem 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
         nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 28px; font-weight: bold; }
+        .logo { font-size: 30px; font-weight: bold; letter-spacing: 2px; }
         .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 30px;
+            margin-left: 35px;
             font-weight: 500;
         }
-        
+        .nav-links a:hover { color: #fbbf24; }
+
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1558618047-3c8c76ca5f8a?ixlib=rb-4.0.3') center/cover no-repeat;
-            height: 100vh;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            color: white;
-            margin-top: 70px;
-        }
-        
-        .hero-content {
-            max-width: 700px;
+            padding-top: 80px;
         }
         
         .hero h1 {
-            font-size: 60px;
+            font-size: 68px;
             margin-bottom: 20px;
+            line-height: 1.1;
         }
         
         .hero p {
-            font-size: 24px;
-            margin-bottom: 30px;
+            font-size: 26px;
+            margin-bottom: 40px;
         }
         
         .btn {
-            display: inline-block;
             background: #f97316;
             color: white;
-            padding: 15px 35px;
+            padding: 18px 45px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
+            display: inline-block;
             transition: 0.3s;
         }
-        
         .btn:hover {
             background: #ea580c;
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
-        
+
         .products {
-            padding: 100px 0;
+            padding: 120px 0;
             background: #f8fafc;
         }
         
         .section-title {
             text-align: center;
-            font-size: 40px;
-            margin-bottom: 60px;
+            font-size: 42px;
+            margin-bottom: 70px;
             color: #1e3a8a;
         }
         
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
         }
         
         .card {
             background: white;
-            border-radius: 15px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: 0.3s;
+            transition: 0.4s;
         }
         
         .card:hover {
@@ -101,19 +99,36 @@
         
         .card img {
             width: 100%;
-            height: 220px;
+            height: 240px;
             object-fit: cover;
         }
         
         .card-content {
-            padding: 20px;
+            padding: 25px;
         }
         
+        .card h3 { color: #1e40af; margin-bottom: 8px; }
+        
         footer {
-            background: #1e2937;
+            background: #0f172a;
             color: white;
             text-align: center;
-            padding: 40px 0;
+            padding: 60px 0;
+            font-size: 18px;
+        }
+
+        /* Стиль акцентного спортивного года */
+        .sport-year {
+            font-weight: 900;
+            font-style: italic;
+            color: #f97316;
+            letter-spacing: 1px;
+            background: rgba(249, 115, 22, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 0 5px;
+            border: 1px dashed rgba(249, 115, 22, 0.3);
         }
     </style>
 </head>
@@ -134,11 +149,9 @@
 
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1>Спортивное оборудование<br>для чемпионов</h1>
-                <p>Профессиональный инвентарь для зала, дома и улицы</p>
-                <a href="#" class="btn">Перейти в каталог</a>
-            </div>
+            <h1>Спортивное оборудование<br>для чемпионов</h1>
+            <p>Профессиональный инвентарь для зала, дома и улицы</p>
+            <a href="#" class="btn">Перейти в каталог</a>
         </div>
     </section>
 
@@ -147,7 +160,7 @@
             <h2 class="section-title">Популярные товары</h2>
             <div class="cards">
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b" alt="Штанга">
+                    <img src="https://picsum.photos/id/1015/800/600" alt="Штанга">
                     <div class="card-content">
                         <h3>Олимпийская штанга</h3>
                         <p>Профессиональное качество</p>
@@ -155,7 +168,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1593077219363-0b9b7d8a6c3c" alt="Беговая дорожка">
+                    <img src="https://picsum.photos/id/866/800/600" alt="Беговая дорожка">
                     <div class="card-content">
                         <h3>Беговая дорожка</h3>
                         <p>Электрическая, складная</p>
@@ -163,10 +176,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1584735935682-2d2b4e2e0b3e" alt="Гантели">
+                    <img src="https://picsum.photos/id/201/800/600" alt="Гантели">
                     <div class="card-content">
                         <h3>Комплект гантелей</h3>
-                        <p>От 2 до 32 кг</p>
+                        <p>Разборные 2–32 кг</p>
                         <strong>15 990 ₽</strong>
                     </div>
                 </div>
@@ -176,7 +189,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 Mithril Sport — Магазин спортивного оборудования</p>
+            <p>&copy; <span class="sport-year">2026</span> Mithril Sport — Магазин спортивного оборудования</p>
         </div>
     </footer>
 </body>
