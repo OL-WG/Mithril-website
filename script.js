@@ -264,25 +264,25 @@ function submitOrder(){
         const TOKEN = '8677453235:AAHbcKqlQyRZkTMhoKZsBsRBrww1v8Xek9k';
         const CHAT_ID = '-1003538222198';
         const text = [
-            '📦 *НОВЫЙ ЗАКАЗ*',
+            '📦 НОВЫЙ ЗАКАЗ',
             '',
-            '👤 *Клиент:* '+orderData.fio,
-            '📞 *Телефон:* '+orderData.phone,
-            '📧 *Email:* '+orderData.email,
-            '📍 *Адрес:* '+orderData.address,
+            '👤 Клиент: '+orderData.fio,
+            '📞 Телефон: '+orderData.phone,
+            '📧 Email: '+orderData.email,
+            '📍 Адрес: '+orderData.address,
             '',
-            '🛒 *Товары:*',
+            '🛒 Товары:',
             ...orderData.items.map(i=>'• '+i),
             '',
-            '🎟 *Промокод:* '+orderData.promo,
-            '💰 *Итого:* '+orderData.total,
+            '🎟 Промокод: '+orderData.promo,
+            '💰 Итого: '+orderData.total,
             '🕐 '+new Date().toLocaleString('ru-RU')
         ].join('\n');
 
         fetch('https://api.telegram.org/bot'+TOKEN+'/sendMessage',{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({chat_id:CHAT_ID,text:text,parse_mode:'Markdown'})
+            body:JSON.stringify({chat_id:CHAT_ID,text:text})
         }).then(r=>r.json()).then(d=>{
             if(!d.ok)console.error('TG error:',d);
         }).catch(e=>console.error('TG fetch error:',e));
