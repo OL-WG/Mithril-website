@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mithril Sport</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="scroll-progress" id="scrollProgress"></div>
+<div id="preloader">
+    <div class="pre-logo">
+        <img src="data:image/png;base64,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" alt="M" style="height:40px;width:auto;filter:invert(0);">
+        <span class="pre-word">ITHRIL</span>
+    </div>
+    <div class="pre-bar"><div class="pre-fill"></div></div>
+</div>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#" onclick="closeMobileMenu()">Главная</a>
+    <a href="#" onclick="showCatalog();closeMobileMenu();return false;">Каталог</a>
+    <a href="#features" onclick="closeMobileMenu()">О нас</a>
+    <a href="#contacts" onclick="closeMobileMenu()">Контакты</a>
+</div>
+
+<header id="header">
+    <div class="container">
+        <nav>
+            <a href="#" class="logo-link" onclick="showMain()">
+                <img src="data:image/png;base64,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" alt="M" class="logo-img" style="height:36px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));transition:filter .3s;">
+                <span class="logo-word">ITHRIL</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" onclick="showMain()">Главная</a>
+                <a href="#" onclick="showCatalog();return false;">Каталог</a>
+                <a href="#features">О нас</a>
+                <a href="#contacts">Контакты</a>
+                <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+                <button class="nav-links" style="background:none;border:none;cursor:none;color:var(--muted);font-size:18px;padding:0;" onclick="showFavPage()" title="Избранное">♡</button>
+                <button class="nav-links" style="background:none;border:none;cursor:none;color:var(--muted);font-size:14px;padding:0;font-weight:700;letter-spacing:1px;" onclick="showHistoryPage()" id="histBtn">📋</button>
+                <div style="position:relative;">
+                    <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">🌐 RU</button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option active" onclick="setLang('ru')">🇷🇺 RU</button>
+                        <button class="lang-option" onclick="setLang('en')">🇬🇧 EN</button>
+                        <button class="lang-option" onclick="setLang('kz')">🇰🇿 KZ</button>
+                    </div>
+                </div>
+                <button class="cart-trigger" onclick="toggleCart()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    Корзина <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+            <button class="burger" id="burger" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<!-- PROMO -->
+<div class="promo-banner" style="margin-top:64px;">
+    <div class="container">
+        <div class="promo-inner">
+            <span class="promo-text">🔥 Летняя акция — скидка 20% на всё кардио-оборудование</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+                <div class="timer-block" id="tH">00</div><span class="timer-sep">:</span>
+                <div class="timer-block" id="tM">00</div><span class="timer-sep">:</span>
+                <div class="timer-block" id="tS">00</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN PAGE -->
+<div id="mainPage">
+<section class="hero">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-bg"></div>
+    <div class="hero-parallax" id="heroParallax"></div>
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-label">Профессиональное оборудование</div>
+            <h1>Спортивное<br>снаряжение<br>для <span class="shimmer">чемпионов</span></h1>
+            <p>Профессиональный инвентарь для зала, дома и улицы. Мы изготавливаем только лучшее.</p>
+            <div class="hero-actions">
+                <a href="#" class="btn-primary" onclick="showCatalog();return false;">Перейти в каталог</a>
+                <a href="#features" class="btn-ghost">О компании</a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><div class="stat-num">0</div><div class="stat-label">Товаров</div></div>
+            <div class="stat"><div class="stat-num">0</div><div class="stat-label">Клиентов</div></div>
+            <div class="stat"><div class="stat-num">0</div><div class="stat-label">Лет опыта</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="brands">
+    <div class="brands-track">
+        <span class="brand-item">INVICTUS</span><span class="brand-item">SADU</span><span class="brand-item">MITHRIL ARMWRESTLING</span><span class="brand-item">BANZAI</span>
+        <span class="brand-item">INVICTUS</span><span class="brand-item">SADU</span><span class="brand-item">MITHRIL ARMWRESTLING</span><span class="brand-item">BANZAI</span>
+        <span class="brand-item">INVICTUS</span><span class="brand-item">SADU</span><span class="brand-item">MITHRIL ARMWRESTLING</span><span class="brand-item">BANZAI</span>
+        <span class="brand-item">INVICTUS</span><span class="brand-item">SADU</span><span class="brand-item">MITHRIL ARMWRESTLING</span><span class="brand-item">BANZAI</span>
+    </div>
+</div>
+
+<section class="counters reveal">
+    <div class="container">
+        <div class="counters-grid">
+            <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Товаров в каталоге</div></div>
+            <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Довольных клиентов</div></div>
+            <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">На рынке</div></div>
+            <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Рекомендуют нас</div></div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-header reveal"><div><div class="section-label">Почему мы</div><div class="section-title">Наши преимущества</div></div></div>
+        <div class="features-grid reveal">
+            <div class="feature-item"><div class="feature-icon">🚚</div><div class="feature-title">Быстрая доставка</div><div class="feature-text">Доставляем по всей стране за 1–3 дня. Бесплатно при заказе от 30 000 ₽.</div></div>
+            <div class="feature-item"><div class="feature-icon">🏆</div><div class="feature-title">Гарантия качества</div><div class="feature-text">Всё оборудование сертифицировано и прошло проверку нашими экспертами.</div></div>
+            <div class="feature-item"><div class="feature-icon">🔧</div><div class="feature-title">Сборка и сервис</div><div class="feature-text">Помогаем с монтажом тренажёров и обеспечиваем гарантийное обслуживание.</div></div>
+            <div class="feature-item"><div class="feature-icon">💬</div><div class="feature-title">Экспертная помощь</div><div class="feature-text">Наши специалисты подберут оборудование под ваши цели и бюджет.</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- DELIVERY CALC -->
+<section class="delivery-section" id="delivery">
+    <div class="container">
+        <div class="section-header reveal"><div><div class="section-label">Логистика</div><div class="section-title">Калькулятор доставки</div></div></div>
+        <div class="delivery-grid reveal">
+            <div class="delivery-form">
+                <label class="d-label">Ваш город</label>
+                <select class="d-select" id="dCity">
+                    <option value="">Выберите город</option>
+                    <option value="moscow">Москва</option>
+                    <option value="spb">Санкт-Петербург</option>
+                    <option value="ekb">Екатеринбург</option>
+                    <option value="nsk">Новосибирск</option>
+                    <option value="kzn">Казань</option>
+                    <option value="almaty">Алматы</option>
+                    <option value="other">Другой город</option>
+                </select>
+                <label class="d-label">Вес заказа (кг)</label>
+                <input type="number" class="d-input" id="dWeight" placeholder="Например: 25" min="1">
+                <label class="d-label">Тип доставки</label>
+                <select class="d-select" id="dType">
+                    <option value="standard">Стандартная (3–5 дней)</option>
+                    <option value="express">Экспресс (1–2 дня)</option>
+                    <option value="pickup">Самовывоз</option>
+                </select>
+                <button class="calc-btn" onclick="calcDelivery()">Рассчитать доставку</button>
+            </div>
+            <div class="delivery-result" id="deliveryResult">
+                <div class="d-result-label">Стоимость доставки</div>
+                <div class="d-result-value" id="dResultPrice">0$</div>
+                <div class="d-result-info" id="dResultInfo"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="reviews">
+    <div class="container">
+        <div class="section-header reveal"><div><div class="section-label">Мнения</div><div class="section-title">Отзывы клиентов</div></div></div>
+        <div class="reviews-grid reveal">
+            <div class="review-card"><div class="review-stars" style="color:var(--border)">★★★★★</div><p class="review-text">Отзыв появится здесь</p><div class="review-author"><div class="review-avatar" style="color:var(--border)">—</div><div><div class="review-name" style="color:var(--border)">—</div><div class="review-date">—</div></div></div></div>
+            <div class="review-card"><div class="review-stars" style="color:var(--border)">★★★★★</div><p class="review-text">Отзыв появится здесь</p><div class="review-author"><div class="review-avatar" style="color:var(--border)">—</div><div><div class="review-name" style="color:var(--border)">—</div><div class="review-date">—</div></div></div></div>
+            <div class="review-card"><div class="review-stars" style="color:var(--border)">★★★★★</div><p class="review-text">Отзыв появится здесь</p><div class="review-author"><div class="review-avatar" style="color:var(--border)">—</div><div><div class="review-name" style="color:var(--border)">—</div><div class="review-date">—</div></div></div></div>
+        </div>
+    </div>
+</section>
+</div><!-- /mainPage -->
+
+<!-- PRODUCT PAGE -->
+<div id="productPage">
+    <div class="container">
+        <button class="product-page-back" onclick="showCatalog()">← Назад в каталог</button>
+        <div class="product-page-grid">
+            <div class="product-page-img" id="ppImg">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div>
+                <div class="product-page-cat" id="ppCat"></div>
+                <div class="product-page-name" id="ppName"></div>
+                <p class="product-page-desc" id="ppDesc"></p>
+                <div class="product-page-specs" id="ppSpecs"></div>
+                <div class="product-page-price">0$</div>
+                <div id="ppExtra" style="margin-top:16px;"></div>
+                <div class="product-page-btns">
+                    <button class="pp-buy-btn" id="ppBuyBtn" onclick="ppBuy()">Купить сейчас</button>
+                    <button class="pp-cart-btn" id="ppCartBtn" onclick="ppCart()">В корзину</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CATALOG PAGE -->
+<div id="catalogPage" style="display:none;padding:100px 0 60px;min-height:100vh;background:var(--bg2);">
+    <div class="container">
+        <button class="product-page-back" onclick="showMain()">← На главную</button>
+        <div class="section-header reveal">
+            <div><div class="section-label">Ассортимент</div><div class="section-title">Каталог</div></div>
+            <div>
+                <div class="search-wrap">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Поиск..." oninput="searchProducts()">
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" onclick="filterBy('all',this)">Все</button>
+                    <button class="filter-btn" onclick="filterBy('силовые',this)">Силовые</button>
+                    <button class="filter-btn" onclick="filterBy('кардио',this)">Кардио</button>
+                    <button class="filter-btn" onclick="filterBy('веса',this)">Свободные веса</button>
+                    <button class="filter-btn" onclick="filterBy('аксессуары',this)">Аксессуары</button>
+                </div>
+            </div>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+</div>
+
+
+<!-- FAVORITES PAGE -->
+<div id="favPage">
+    <div class="container">
+        <button class="product-page-back" onclick="showMain()">← На главную</button>
+        <div style="margin-bottom:32px;"><div class="section-label" style="margin-bottom:8px;" id="favLabel">Избранное</div><div class="section-title" id="favTitle">Избранные товары</div></div>
+        <div class="products-grid" id="favGrid"></div>
+    </div>
+</div>
+
+<!-- ORDER HISTORY PAGE -->
+<div id="historyPage">
+    <div class="container">
+        <button class="product-page-back" onclick="showMain()">← На главную</button>
+        <div style="margin-bottom:32px;"><div class="section-label" style="margin-bottom:8px;" id="histLabel">История</div><div class="section-title" id="histTitle">История заказов</div></div>
+        <div id="historyList"></div>
+    </div>
+</div>
+
+<!-- COMPARE PAGE -->
+<div id="comparePage">
+    <div class="container">
+        <button class="product-page-back" onclick="showMain()">← Назад</button>
+        <div class="section-label" style="margin-bottom:8px;">Выбор</div>
+        <div class="section-title" style="margin-bottom:32px;">Сравнение товаров</div>
+        <div id="compareTableWrap"></div>
+    </div>
+</div>
+
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compareBar">
+    <div style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-right:8px;">Сравнить:</div>
+    <div class="compare-slot" id="cSlot1">Товар 1</div>
+    <div class="compare-slot" id="cSlot2">Товар 2</div>
+    <button class="compare-btn-go" onclick="showComparePage()">Сравнить</button>
+    <button class="compare-btn-clear" onclick="clearCompare()">Очистить</button>
+</div>
+
+<!-- FOOTER -->
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+    <p class="cookie-text" id="cookieText">Мы используем файлы cookie для улучшения работы сайта. Продолжая использование сайта, вы соглашаетесь с нашей политикой конфиденциальности.</p>
+    <div class="cookie-btns">
+        <button class="cookie-accept" onclick="acceptCookie()" id="cookieAcceptBtn">Принять</button>
+        <button class="cookie-decline" onclick="declineCookie()" id="cookieDeclineBtn">Отклонить</button>
+    </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-head" id="chatHead">Есть вопросы?</div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-msg" id="chatMsg1">👋 Привет! Мы рады помочь вам выбрать спортивное оборудование.</div>
+            <div class="chat-msg" id="chatMsg2">Напишите ваш вопрос и мы ответим в течение нескольких минут.</div>
+        </div>
+        <div class="chat-input-wrap">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Введите сообщение...">
+            <button class="chat-send" onclick="sendChat()">➤</button>
+        </div>
+    </div>
+    <button class="chat-bubble" onclick="toggleChat()">
+        💬
+        <span class="chat-dot"></span>
+    </button>
+</div>
+
+<footer id="contacts">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo-wrap">
+                    <img src="data:image/png;base64,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" alt="M" style="height:30px;width:auto;opacity:.85;">
+                    <span class="footer-logo-word">ITHRIL</span>
+                </div>
+                <p class="footer-desc">Профессиональное спортивное оборудование для тех, кто не останавливается на достигнутом. С 2016 года.</p>
+            </div>
+            <div>
+                <div class="footer-col-title">Каталог</div>
+                <ul class="footer-links"><li><a href="#">Силовые тренажёры</a></li><li><a href="#">Кардио</a></li><li><a href="#">Свободные веса</a></li><li><a href="#">Аксессуары</a></li></ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Контакты</div>
+                <ul class="footer-links"><li><a href="tel:+78001234567">+7 800 123-45-67</a></li><li><a href="mailto:info@mithril.ru">info@mithril.ru</a></li><li><a href="#">Москва, ул. Атлетов, 1</a></li><li><a href="#">Пн–Сб, 9:00–20:00</a></li></ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copy">&copy; <span class="sport-year">2016</span> Mithril Sport</p>
+            <p class="footer-copy" style="font-size:12px;">Политика конфиденциальности</p>
+        </div>
+    </div>
+</footer>
+
+<!-- CART -->
+<div class="cart-panel" id="cartPanel">
+    <div class="cart-head"><div class="cart-title">Корзина</div><button class="cart-close" onclick="toggleCart()">&times;</button></div>
+    <div class="cart-items" id="cartItemsList"><div class="cart-empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Корзина пуста</div></div>
+    <div class="cart-foot" id="cartFoot" style="display:none">
+        <div class="cart-total-row"><span class="cart-total-label">Итого</span><span class="cart-total-sum" id="cartTotalSum">0$</span></div>
+        <button class="checkout-btn" onclick="openOrderForm()">Оформить заказ</button>
+    </div>
+</div>
+
+<!-- ORDER FORM -->
+<div class="order-form-backdrop" id="orderFormBackdrop" onclick="closeOrderForm(event)">
+    <div class="order-form">
+        <button class="form-close" onclick="closeOrderForm()">&times;</button>
+        <div class="form-title">Оформление</div>
+        <p class="form-subtitle">Заполните данные и мы свяжемся с вами</p>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" placeholder="Иван"></div>
+            <div class="form-group"><label class="form-label">Фамилия</label><input type="text" class="form-input" placeholder="Иванов"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Телефон</label>
+            <div style="display:flex;gap:8px;">
+                <select class="form-input" style="width:130px;flex-shrink:0;" id="phoneCode">
+                    <option value="+7">🇷🇺 +7</option>
+                    <option value="+7" selected>🇰🇿 +7</option>
+                    <option value="+380">🇺🇦 +380</option>
+                    <option value="+375">🇧🇾 +375</option>
+                    <option value="+996">🇰🇬 +996</option>
+                    <option value="+992">🇹🇯 +992</option>
+                    <option value="+993">🇹🇲 +993</option>
+                    <option value="+998">🇺🇿 +998</option>
+                    <option value="+994">🇦🇿 +994</option>
+                    <option value="+374">🇦🇲 +374</option>
+                    <option value="+995">🇬🇪 +995</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+49">🇩🇪 +49</option>
+                </select>
+                <input type="tel" class="form-input" placeholder="(999) 000-00-00" style="flex:1;">
+            </div>
+        </div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="ivan@example.com"></div>
+        <div class="form-group"><label class="form-label">Город</label><input type="text" class="form-input" placeholder="Алматы"></div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Улица</label><input type="text" class="form-input" placeholder="ул. Абая"></div>
+            <div class="form-group"><label class="form-label">Дом / Корпус</label><input type="text" class="form-input" placeholder="12А"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">Квартира / Офис</label><input type="text" class="form-input" placeholder="45"></div>
+            <div class="form-group"><label class="form-label">Индекс</label><input type="text" class="form-input" placeholder="050000"></div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Промокод</label>
+            <div class="promo-wrap">
+                <input type="text" class="form-input" id="promoInput" placeholder="">
+                <button class="promo-apply" onclick="applyPromo()">Применить</button>
+            </div>
+            <div class="promo-ok" id="promoOk">✓ Промокод применён — скидка 20%</div>
+        </div>
+        <button class="form-submit" onclick="submitOrder()">Подтвердить заказ</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
