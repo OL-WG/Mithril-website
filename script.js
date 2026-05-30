@@ -261,7 +261,7 @@ function submitOrder(){
         }catch(e){console.log('TG send error:',e);}
     } else {
         // Fallback: send via bot API directly
-        const TOKEN = '8677453235:AAG8MLYWNt1okUEOB8IeryrBvZVVlYqVvTw';
+        const TOKEN = '8677453235:AAHbcKqlQyRZkTMhoKZsBsRBrww1v8Xek9k';
         const CHAT_ID = '-1003538222198';
         const text = [
             '📦 *НОВЫЙ ЗАКАЗ*',
