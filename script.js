@@ -254,13 +254,8 @@ function submitOrder(){
     // Save to history
     saveOrder();
 
-    // Send via Telegram WebApp if available
-    if(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.sendData){
-        try{
-            window.Telegram.WebApp.sendData(JSON.stringify(orderData));
-        }catch(e){console.log('TG send error:',e);}
-    } else {
-        // Fallback: send via bot API directly
+    // Always send via bot API directly to group
+    {
         const TOKEN = '8677453235:AAHbcKqlQyRZkTMhoKZsBsRBrww1v8Xek9k';
         const CHAT_ID = '-1003538222198';
         const text = [
@@ -287,6 +282,7 @@ function submitOrder(){
             if(!d.ok)console.error('TG error:',d);
         }).catch(e=>console.error('TG fetch error:',e));
     }
+
 
     cart={};
     updateCartUI();
