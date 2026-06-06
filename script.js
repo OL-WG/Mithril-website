@@ -111,7 +111,8 @@ function getFiltered(){const q=document.getElementById('searchInput')?document.g
 window.filterBy = function(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showSkeletons();setTimeout(()=>renderProducts(getFiltered()),600);}
 window.searchProducts = function(){showSkeletons();setTimeout(()=>renderProducts(getFiltered()),400);}
 
-showSkeletons(); // Firebase will load products
+showSkeletons();
+setTimeout(()=>window.renderProducts(products),1200);
 
 // HASH ROUTING — PRODUCT PAGE
 window.openProductPage = function(id){
@@ -511,31 +512,6 @@ function saveOrder(){
 // ── AVAILABILITY ──
 const avail={1:'in',2:'in',3:'in',4:'order',5:'in',6:'in',7:'out',8:'in',9:'order'};
 
-// ── FIREBASE ──
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
-    authDomain: "mithril-shop-b2b0b.firebaseapp.com",
-    projectId: "mithril-shop-b2b0b",
-    storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
-    messagingSenderId: "182146848633",
-    appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
-};
-const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
-
-
-
-
-function getAvailBadge(id){
-  const a=avail[id]||'in';
-  if(a==='in')return `<span class="avail-badge avail-in">● ${t('avail_in')}</span>`;
-  if(a==='order')return `<span class="avail-badge avail-order">● ${t('avail_order')}</span>`;
-  return `<span class="avail-badge avail-out">● ${t('avail_out')}</span>`;
-}
-
 // ── RECOMMENDATIONS ──
 function getRecommendations(id){
   const p=products.find(x=>x.id===id);if(!p)return[];
@@ -564,51 +540,41 @@ window.hideAllPages = function(){
 }
 
 // ── FIREBASE LOAD ──
+
+// Start loading
+
+
+// ── FIREBASE ──
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const _fbConfig = {
+const _db = getFirestore(initializeApp({
     apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
     authDomain: "mithril-shop-b2b0b.firebaseapp.com",
     projectId: "mithril-shop-b2b0b",
     storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
     messagingSenderId: "182146848633",
     appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
-};
-const _fbApp = initializeApp(_fbConfig);
-const _db = getFirestore(_fbApp);
+}));
 
-async function loadFromFirebase() {
+(async function loadFromFirebase() {
     try {
         const prodSnap = await getDocs(collection(_db, 'products'));
         if(!prodSnap.empty) {
-            products = prodSnap.docs.map(d => {
-                const data = d.data();
-                return {
-                    id: d.id,
-                    name: data.name || '',
-                    cat: data.cat || 'силовые',
-                    price: data.price || '0',
-                    desc: data.desc || '',
-                    specs: data.specs || [],
-                    badge: data.badge || null,
-                    avail: data.avail || 'in'
-                };
-            });
+            products = prodSnap.docs.map(d => ({
+                id: d.id, ...d.data(),
+                specs: d.data().specs || [],
+                badge: d.data().badge || null
+            }));
             products.forEach(p => { avail[p.id] = p.avail || 'in'; });
         }
         const promoSnap = await getDocs(collection(_db, 'promos'));
         if(!promoSnap.empty) {
             dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
         }
-        showSkeletons();
-        setTimeout(() => renderProducts(getFiltered()), 400);
     } catch(e) {
         console.log('Firebase error:', e);
-        showSkeletons();
-        setTimeout(() => renderProducts(products), 400);
     }
-}
-
-// Start loading
-loadFromFirebase();
+    showSkeletons();
+    setTimeout(() => window.renderProducts(getFiltered()), 500);
+})();
