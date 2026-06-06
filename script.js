@@ -1,3 +1,55 @@
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
+    authDomain: "mithril-shop-b2b0b.firebaseapp.com",
+    projectId: "mithril-shop-b2b0b",
+    storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
+    messagingSenderId: "182146848633",
+    appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
+async function loadFromFirebase() {
+    try {
+        // Load products
+        const prodSnap = await getDocs(collection(db, 'products'));
+        if(!prodSnap.empty) {
+            products = prodSnap.docs.map(d => {
+                const data = d.data();
+                return {
+                    id: d.id,
+                    name: data.name || '',
+                    cat: data.cat || 'силовые',
+                    price: data.price || '0',
+                    desc: data.desc || '',
+                    specs: data.specs || [],
+                    badge: data.badge || null,
+                    avail: data.avail || 'in'
+                };
+            });
+            // Update avail object
+            products.forEach(p => { avail[p.id] = p.avail || 'in'; });
+        }
+        // Load promos
+        const promoSnap = await getDocs(collection(db, 'promos'));
+        if(!promoSnap.empty) {
+            dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
+        }
+        // Re-render
+        showSkeletons();
+        setTimeout(() => renderProducts(getFiltered()), 400);
+    } catch(e) {
+        console.log('Firebase load error:', e);
+        // fallback to hardcoded products
+        showSkeletons();
+        setTimeout(() => renderProducts(getFiltered()), 400);
+    }
+}
+
 const products = [
     {id:1,name:'Олимпийская штанга',cat:'силовые',price:0,desc:'Профессиональная олимпийская штанга 20 кг. Стальной гриф, хромированные замки. Выдерживает нагрузку до 700 кг.',specs:[{l:'Вес',v:'20 кг'},{l:'Длина',v:'220 см'},{l:'Покрытие',v:'Хром'},{l:'Гарантия',v:'3 года'}],badge:'Хит'},
     {id:2,name:'Беговая дорожка T-900',cat:'кардио',price:0,desc:'Электрическая складная беговая дорожка. Скорость до 18 км/ч, угол наклона до 12°.',specs:[{l:'Скорость',v:'1–18 км/ч'},{l:'Наклон',v:'0–12°'},{l:'Мощность',v:'2.5 л.с.'},{l:'Нагрузка',v:'до 130 кг'}],badge:'Новинка'},
@@ -10,7 +62,7 @@ const products = [
     {id:9,name:'Эллиптический тренажёр',cat:'кардио',price:0,desc:'Эллиптический тренажёр с длиной шага 40 см. 16 уровней сопротивления.',specs:[{l:'Шаг',v:'40 см'},{l:'Уровни',v:'16'},{l:'Bluetooth',v:'Есть'},{l:'Нагрузка',v:'до 150 кг'}]},
 ];
 
-let cart={}, favorites=new Set(), compareList=[], currentFilter='all', activeProductId=null, lm=false;
+let cart={}, favorites=new Set(), compareList=[], currentFilter='all', activeProductId=null, lm=false, dbPromos=[];
 
 // PRELOADER
 window.addEventListener('load',()=>{
@@ -98,7 +150,7 @@ function renderProducts(list){
                   <div class="product-cat">${p.cat}</div>
                   <div style="margin-top:6px;">${getAvailBadge(p.id)}</div>
                 </div>
-                <div class="product-price">0$</div>
+                <div class="product-price">${p.price ? "$"+p.price : "0$"}</div>
             </div>
             <div class="product-actions">
                 <button class="action-btn-buy" onclick="buyNow(${p.id})">${t('buy')}</button>
@@ -112,7 +164,7 @@ function filterBy(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-
 function searchProducts(){showSkeletons();setTimeout(()=>renderProducts(getFiltered()),400);}
 
 showSkeletons();
-setTimeout(()=>renderProducts(products),1200);
+loadFromFirebase();
 
 // HASH ROUTING — PRODUCT PAGE
 function openProductPage(id){
@@ -121,6 +173,7 @@ function openProductPage(id){
     document.getElementById('ppCat').textContent=p.cat;
     document.getElementById('ppName').textContent=p.name;
     document.getElementById('ppDesc').textContent=p.desc;
+    document.getElementById('ppPrice').textContent=p.price?'$'+p.price:'0$';
     document.getElementById('ppSpecs').innerHTML=p.specs.map(s=>`<div class="spec-item"><div class="spec-label">${s.l}</div><div class="spec-value">${s.v}</div></div>`).join('');
     // availability + recs
     const ppExtra=document.getElementById('ppExtra');
@@ -221,8 +274,19 @@ function closeOrderForm(e){if(e&&e.target!==document.getElementById('orderFormBa
 function applyPromo(){
     const val=document.getElementById('promoInput').value.trim().toUpperCase();
     const ok=document.getElementById('promoOk');
-    if(val==='MITHRIL20'||val==='SPORT'||val==='BANZAI'){ok.classList.add('show');showToast('Промокод применён!');}
-    else{ok.classList.remove('show');showToast('Неверный промокод');}
+    // Check Firebase promos first
+    const fbPromo = dbPromos.find(p => p.code === val && (p.active==='true'||p.active===true));
+    if(fbPromo){
+        ok.textContent = '✓ Промокод применён — скидка '+fbPromo.discount+'%';
+        ok.classList.add('show');
+        showToast('Промокод применён! Скидка '+fbPromo.discount+'%');
+    } else if(val==='MITHRIL20'||val==='SPORT'||val==='BANZAI'){
+        ok.classList.add('show');
+        showToast('Промокод применён!');
+    } else {
+        ok.classList.remove('show');
+        showToast('Неверный промокод');
+    }
 }
 function submitOrder(){
     // Collect form data
@@ -456,7 +520,7 @@ function renderFavPage(){
       </div>
       <div class="product-info">
         <div><div class="product-name">${p.name}</div><div class="product-cat">${p.cat}</div></div>
-        <div class="product-price">0$</div>
+        <div class="product-price">${p.price ? "$"+p.price : "0$"}</div>
       </div>
       <div class="product-actions">
         <button class="action-btn-buy" onclick="buyNow(${p.id})">${t('buy')}</button>
