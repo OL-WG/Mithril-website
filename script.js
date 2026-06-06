@@ -111,8 +111,7 @@ function getFiltered(){const q=document.getElementById('searchInput')?document.g
 window.filterBy = function(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showSkeletons();setTimeout(()=>renderProducts(getFiltered()),600);}
 window.searchProducts = function(){showSkeletons();setTimeout(()=>renderProducts(getFiltered()),400);}
 
-showSkeletons();
-loadFromFirebase();
+showSkeletons(); // Firebase will load products
 
 // HASH ROUTING — PRODUCT PAGE
 window.openProductPage = function(id){
@@ -527,42 +526,7 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 
-async function loadFromFirebase() {
-    try {
-        // Load products
-        const prodSnap = await getDocs(collection(db, 'products'));
-        if(!prodSnap.empty) {
-            products = prodSnap.docs.map(d => {
-                const data = d.data();
-                return {
-                    id: d.id,
-                    name: data.name || '',
-                    cat: data.cat || 'силовые',
-                    price: data.price || '0',
-                    desc: data.desc || '',
-                    specs: data.specs || [],
-                    badge: data.badge || null,
-                    avail: data.avail || 'in'
-                };
-            });
-            // Update avail object
-            products.forEach(p => { avail[p.id] = p.avail || 'in'; });
-        }
-        // Load promos
-        const promoSnap = await getDocs(collection(db, 'promos'));
-        if(!promoSnap.empty) {
-            dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
-        }
-        // Re-render
-        showSkeletons();
-        setTimeout(() => renderProducts(getFiltered()), 400);
-    } catch(e) {
-        console.log('Firebase load error:', e);
-        // fallback to hardcoded products
-        showSkeletons();
-        setTimeout(() => renderProducts(getFiltered()), 400);
-    }
-}
+
 
 
 function getAvailBadge(id){
@@ -598,3 +562,53 @@ window.hideAllPages = function(){
     const el=document.getElementById(id);if(el)el.style.display='none';
   });
 }
+
+// ── FIREBASE LOAD ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const _fbConfig = {
+    apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
+    authDomain: "mithril-shop-b2b0b.firebaseapp.com",
+    projectId: "mithril-shop-b2b0b",
+    storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
+    messagingSenderId: "182146848633",
+    appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
+};
+const _fbApp = initializeApp(_fbConfig);
+const _db = getFirestore(_fbApp);
+
+async function loadFromFirebase() {
+    try {
+        const prodSnap = await getDocs(collection(_db, 'products'));
+        if(!prodSnap.empty) {
+            products = prodSnap.docs.map(d => {
+                const data = d.data();
+                return {
+                    id: d.id,
+                    name: data.name || '',
+                    cat: data.cat || 'силовые',
+                    price: data.price || '0',
+                    desc: data.desc || '',
+                    specs: data.specs || [],
+                    badge: data.badge || null,
+                    avail: data.avail || 'in'
+                };
+            });
+            products.forEach(p => { avail[p.id] = p.avail || 'in'; });
+        }
+        const promoSnap = await getDocs(collection(_db, 'promos'));
+        if(!promoSnap.empty) {
+            dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
+        }
+        showSkeletons();
+        setTimeout(() => renderProducts(getFiltered()), 400);
+    } catch(e) {
+        console.log('Firebase error:', e);
+        showSkeletons();
+        setTimeout(() => renderProducts(products), 400);
+    }
+}
+
+// Start loading
+loadFromFirebase();
