@@ -52,7 +52,7 @@ if(canvas){
 window.toggleTheme = function(){lm=!lm;document.body.classList.toggle('lm',lm);document.getElementById('themeBtn').textContent=lm?'🌑':'🌙';}
 
 // TIMER
-function updateTimer(){const end=new Date();end.setHours(23,59,59,0);const d=end-new Date(),h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);document.getElementById('tH').textContent=String(h).padStart(2,'0');document.getElementById('tM').textContent=String(m).padStart(2,'0');document.getElementById('tS').textContent=String(s).padStart(2,'0');}
+window.updateTimer = function updateTimer(){const end=new Date();end.setHours(23,59,59,0);const d=end-new Date(),h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);document.getElementById('tH').textContent=String(h).padStart(2,'0');document.getElementById('tM').textContent=String(m).padStart(2,'0');document.getElementById('tS').textContent=String(s).padStart(2,'0');}
 updateTimer();setInterval(updateTimer,1000);
 
 // MOBILE MENU
@@ -64,7 +64,7 @@ const revObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isInters
 document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
 // SKELETON → PRODUCTS
-function showSkeletons(){
+window.showSkeletons = function showSkeletons(){
     const grid=document.getElementById('productsGrid');
     grid.innerHTML=Array.from({length:6}).map(()=>`
         <div class="skeleton-card">
@@ -76,7 +76,7 @@ function showSkeletons(){
         </div>`).join('');
 }
 
-function renderProducts(list){
+window.renderProducts = function renderProducts(list){
     const grid=document.getElementById('productsGrid');
     if(!list.length){grid.innerHTML='<div style="padding:60px;text-align:center;color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;grid-column:1/-1;">Ничего не найдено</div>';return;}
     grid.innerHTML=list.map(p=>`
@@ -107,7 +107,7 @@ function renderProducts(list){
         </div>`).join('');
 }
 
-function getFiltered(){const q=document.getElementById('searchInput')?document.getElementById('searchInput').value.toLowerCase():'';return products.filter(p=>(currentFilter==='all'||p.cat===currentFilter)&&(!q||p.name.toLowerCase().includes(q)));}
+window.getFiltered = function getFiltered(){const q=document.getElementById('searchInput')?document.getElementById('searchInput').value.toLowerCase():'';return products.filter(p=>(currentFilter==='all'||p.cat===currentFilter)&&(!q||p.name.toLowerCase().includes(q)));}
 window.filterBy = function(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showSkeletons();setTimeout(()=>renderProducts(getFiltered()),600);}
 window.searchProducts = function(){showSkeletons();setTimeout(()=>renderProducts(getFiltered()),400);}
 
@@ -203,7 +203,7 @@ window.addToCart = function(id){
     updateCartUI();popBadge();playClick();showToast(p.name+' '+t('added'));
 }
 window.changeQty = function(id,delta){if(!cart[id])return;cart[id].qty+=delta;if(cart[id].qty<=0)delete cart[id];updateCartUI();}
-function updateCartUI(){
+window.updateCartUI = function updateCartUI(){
     const items=Object.values(cart),count=items.reduce((s,i)=>s+i.qty,0);
     const badge=document.getElementById('cartBadge');badge.textContent=count;badge.classList.toggle('visible',count>0);
     const listEl=document.getElementById('cartItemsList'),footEl=document.getElementById('cartFoot');
@@ -320,7 +320,7 @@ window.calcDelivery = function(){
 }
 
 // SOUND
-function playClick(){try{const ac=new AudioContext(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=800;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.1);o.stop(ac.currentTime+.1);}catch(e){}}
+window.playClick = function playClick(){try{const ac=new AudioContext(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=800;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.1);o.stop(ac.currentTime+.1);}catch(e){}}
 
 // TOAST
 window.showToast = function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
@@ -384,7 +384,7 @@ window.setLang = function(lang){
   document.getElementById('langDropdown').classList.remove('open');
   applyLang();
 }
-function applyLang(){
+window.applyLang = function applyLang(){
   // nav
   const navLinks=document.querySelectorAll('.nav-links a');
   if(navLinks[0])navLinks[0].textContent=t('nav_home');
@@ -420,10 +420,10 @@ window.addEventListener('scroll',()=>{
 });
 
 // ── COOKIE ──
-function checkCookie(){if(!localStorage.getItem('cookie_accepted'))setTimeout(()=>{const b=document.getElementById('cookieBanner');if(b)b.classList.add('show');},2000);}
+window.checkCookie = function checkCookie(){if(!localStorage.getItem('cookie_accepted'))setTimeout(()=>{const b=document.getElementById('cookieBanner');if(b)b.classList.add('show');},2000);}
 window.acceptCookie = function(){localStorage.setItem('cookie_accepted','1');hideCookieBanner();}
 window.declineCookie = function(){hideCookieBanner();}
-function hideCookieBanner(){const b=document.getElementById('cookieBanner');if(b)b.classList.remove('show');}
+window.hideCookieBanner = function hideCookieBanner(){const b=document.getElementById('cookieBanner');if(b)b.classList.remove('show');}
 checkCookie();
 
 // ── CHAT ──
@@ -440,7 +440,7 @@ window.sendChat = function(){
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===document.getElementById('chatInput'))sendChat();});
 
 // ── CART BADGE ANIMATION ──
-function popBadge(){const b=document.getElementById('cartBadge');b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}
+window.popBadge = function popBadge(){const b=document.getElementById('cartBadge');b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}
 
 // ── FAVORITES PAGE ──
 window.showFavPage = function(){
@@ -501,7 +501,7 @@ window.renderHistory = function(){
       <div class="order-total"><span>Итого</span><span>0$</span></div>
     </div>`).join('');
 }
-function saveOrder(){
+window.saveOrder = function saveOrder(){
   const orders=JSON.parse(localStorage.getItem('mithril_orders')||'[]');
   const items=Object.values(cart).map(i=>({name:i.product.name,qty:i.qty}));
   if(!items.length)return;
@@ -513,11 +513,11 @@ function saveOrder(){
 const avail={1:'in',2:'in',3:'in',4:'order',5:'in',6:'in',7:'out',8:'in',9:'order'};
 
 // ── RECOMMENDATIONS ──
-function getRecommendations(id){
+window.getRecommendations = function getRecommendations(id){
   const p=products.find(x=>x.id===id);if(!p)return[];
   return products.filter(x=>x.id!==id&&(x.cat===p.cat||Math.abs(x.id-p.id)<3)).slice(0,3);
 }
-function renderRecommendations(id){
+window.renderRecommendations = function renderRecommendations(id){
   const recs=getRecommendations(id);if(!recs.length)return'';
   return`<div class="recs-section">
     <div class="section-label" style="margin-bottom:12px;">${t('recs_title')}</div>
