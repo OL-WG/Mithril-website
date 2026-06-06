@@ -1,56 +1,4 @@
-// ── FIREBASE ──
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
-    authDomain: "mithril-shop-b2b0b.firebaseapp.com",
-    projectId: "mithril-shop-b2b0b",
-    storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
-    messagingSenderId: "182146848633",
-    appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
-};
-const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
-
-async function loadFromFirebase() {
-    try {
-        // Load products
-        const prodSnap = await getDocs(collection(db, 'products'));
-        if(!prodSnap.empty) {
-            products = prodSnap.docs.map(d => {
-                const data = d.data();
-                return {
-                    id: d.id,
-                    name: data.name || '',
-                    cat: data.cat || 'силовые',
-                    price: data.price || '0',
-                    desc: data.desc || '',
-                    specs: data.specs || [],
-                    badge: data.badge || null,
-                    avail: data.avail || 'in'
-                };
-            });
-            // Update avail object
-            products.forEach(p => { avail[p.id] = p.avail || 'in'; });
-        }
-        // Load promos
-        const promoSnap = await getDocs(collection(db, 'promos'));
-        if(!promoSnap.empty) {
-            dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
-        }
-        // Re-render
-        showSkeletons();
-        setTimeout(() => renderProducts(getFiltered()), 400);
-    } catch(e) {
-        console.log('Firebase load error:', e);
-        // fallback to hardcoded products
-        showSkeletons();
-        setTimeout(() => renderProducts(getFiltered()), 400);
-    }
-}
-
-const products = [
+let products = [
     {id:1,name:'Олимпийская штанга',cat:'силовые',price:0,desc:'Профессиональная олимпийская штанга 20 кг. Стальной гриф, хромированные замки. Выдерживает нагрузку до 700 кг.',specs:[{l:'Вес',v:'20 кг'},{l:'Длина',v:'220 см'},{l:'Покрытие',v:'Хром'},{l:'Гарантия',v:'3 года'}],badge:'Хит'},
     {id:2,name:'Беговая дорожка T-900',cat:'кардио',price:0,desc:'Электрическая складная беговая дорожка. Скорость до 18 км/ч, угол наклона до 12°.',specs:[{l:'Скорость',v:'1–18 км/ч'},{l:'Наклон',v:'0–12°'},{l:'Мощность',v:'2.5 л.с.'},{l:'Нагрузка',v:'до 130 кг'}],badge:'Новинка'},
     {id:3,name:'Комплект гантелей',cat:'веса',price:0,desc:'Разборные гантели 2–32 кг. Стальные пластины с хромированным грифом.',specs:[{l:'Вес',v:'2–32 кг'},{l:'Шаг',v:'2 кг'},{l:'Покрытие',v:'Резина'},{l:'В наборе',v:'16 пар'}]},
@@ -563,6 +511,60 @@ function saveOrder(){
 
 // ── AVAILABILITY ──
 const avail={1:'in',2:'in',3:'in',4:'order',5:'in',6:'in',7:'out',8:'in',9:'order'};
+
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
+    authDomain: "mithril-shop-b2b0b.firebaseapp.com",
+    projectId: "mithril-shop-b2b0b",
+    storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
+    messagingSenderId: "182146848633",
+    appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
+async function loadFromFirebase() {
+    try {
+        // Load products
+        const prodSnap = await getDocs(collection(db, 'products'));
+        if(!prodSnap.empty) {
+            products = prodSnap.docs.map(d => {
+                const data = d.data();
+                return {
+                    id: d.id,
+                    name: data.name || '',
+                    cat: data.cat || 'силовые',
+                    price: data.price || '0',
+                    desc: data.desc || '',
+                    specs: data.specs || [],
+                    badge: data.badge || null,
+                    avail: data.avail || 'in'
+                };
+            });
+            // Update avail object
+            products.forEach(p => { avail[p.id] = p.avail || 'in'; });
+        }
+        // Load promos
+        const promoSnap = await getDocs(collection(db, 'promos'));
+        if(!promoSnap.empty) {
+            dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
+        }
+        // Re-render
+        showSkeletons();
+        setTimeout(() => renderProducts(getFiltered()), 400);
+    } catch(e) {
+        console.log('Firebase load error:', e);
+        // fallback to hardcoded products
+        showSkeletons();
+        setTimeout(() => renderProducts(getFiltered()), 400);
+    }
+}
+
+
 function getAvailBadge(id){
   const a=avail[id]||'in';
   if(a==='in')return `<span class="avail-badge avail-in">● ${t('avail_in')}</span>`;
