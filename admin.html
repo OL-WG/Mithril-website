@@ -6,7 +6,7 @@
 <title>Mithril Admin</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',sans-serif;background:#0e0e10;color:#fff;min-height:100vh;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0e0e10;color:#fff;min-height:100vh;}
 
 /* LOGIN */
 .login-screen{position:fixed;inset:0;background:#0e0e10;display:flex;align-items:center;justify-content:center;z-index:1000;}
@@ -14,10 +14,10 @@ body{font-family:'Segoe UI',sans-serif;background:#0e0e10;color:#fff;min-height:
 .login-logo{font-family:Georgia,serif;font-size:32px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;background:linear-gradient(to bottom,#fff 20%,#888 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .login-sub{font-size:12px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
 .login-label{font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:8px;}
-.login-input{width:100%;background:#0e0e10;border:1px solid #2a2a32;color:#fff;padding:12px 16px;font-size:15px;outline:none;margin-bottom:16px;transition:border-color .2s;}
+.login-input{width:100%;background:#0e0e10;border:1px solid #2a2a32;color:#fff;padding:12px 16px;font-size:15px;outline:none;margin-bottom:16px;transition:border-color .2s;font-family:inherit;}
 .login-input:focus{border-color:#7a7a8c;}
 .login-btn{width:100%;background:#fff;color:#0e0e10;border:none;padding:14px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
-.login-btn:hover{background:#c8a84b;color:#0e0e10;}
+.login-btn:hover{background:#c8a84b;}
 .login-error{color:#e05050;font-size:12px;margin-top:8px;display:none;}
 
 /* LAYOUT */
@@ -30,7 +30,6 @@ body{font-family:'Segoe UI',sans-serif;background:#0e0e10;color:#fff;min-height:
 .nav-item{display:flex;align-items:center;gap:12px;padding:12px 24px;color:#7a7a8c;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border-left:3px solid transparent;}
 .nav-item:hover{color:#fff;background:rgba(255,255,255,.04);}
 .nav-item.active{color:#fff;border-left-color:#c8a84b;background:rgba(200,168,75,.08);}
-.nav-item-icon{font-size:16px;width:20px;text-align:center;}
 .sidebar-footer{padding:16px 24px;border-top:1px solid #2a2a32;}
 .logout-btn{width:100%;background:none;border:1px solid #2a2a32;color:#7a7a8c;padding:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
 .logout-btn:hover{border-color:#e05050;color:#e05050;}
@@ -40,34 +39,32 @@ body{font-family:'Segoe UI',sans-serif;background:#0e0e10;color:#fff;min-height:
 .page.active{display:block;}
 
 /* HEADER */
-.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px;}
 .page-title{font-size:28px;font-weight:900;letter-spacing:2px;text-transform:uppercase;}
 .page-subtitle{font-size:12px;color:#7a7a8c;letter-spacing:1px;margin-top:4px;}
 
 /* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
 .stat-card{background:#1e1e24;border:1px solid #2a2a32;padding:24px;}
-.stat-card-num{font-size:36px;font-weight:900;color:#c8a84b;letter-spacing:1px;}
-.stat-card-label{font-size:11px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.stat-num{font-size:36px;font-weight:900;color:#c8a84b;letter-spacing:1px;}
+.stat-label{font-size:11px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
 /* BUTTONS */
-.btn{padding:10px 20px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;}
+.btn{padding:10px 20px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;font-family:inherit;}
 .btn-primary{background:#fff;color:#0e0e10;}
 .btn-primary:hover{background:#c8a84b;}
 .btn-danger{background:none;border:1px solid #e05050;color:#e05050;}
 .btn-danger:hover{background:#e05050;color:#fff;}
-.btn-success{background:#2a5c3a;color:#fff;border:none;}
-.btn-success:hover{background:#3a7c4a;}
 .btn-ghost{background:none;border:1px solid #2a2a32;color:#7a7a8c;}
 .btn-ghost:hover{border-color:#fff;color:#fff;}
 
 /* TABLE */
-.table-wrap{background:#1e1e24;border:1px solid #2a2a32;overflow:hidden;}
+.table-wrap{background:#1e1e24;border:1px solid #2a2a32;overflow:hidden;overflow-x:auto;}
 .table-toolbar{padding:16px 20px;border-bottom:1px solid #2a2a32;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
-.search-input{background:#0e0e10;border:1px solid #2a2a32;color:#fff;padding:8px 14px;font-size:13px;outline:none;width:220px;}
-.search-input:focus{border-color:#7a7a8c;}
-table{width:100%;border-collapse:collapse;}
-th{background:#16161a;padding:12px 16px;text-align:left;font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #2a2a32;}
+.search-box{background:#0e0e10;border:1px solid #2a2a32;color:#fff;padding:8px 14px;font-size:13px;outline:none;width:220px;font-family:inherit;}
+.search-box:focus{border-color:#7a7a8c;}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th{background:#16161a;padding:12px 16px;text-align:left;font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #2a2a32;white-space:nowrap;}
 td{padding:14px 16px;font-size:13px;border-bottom:1px solid #16161a;vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(255,255,255,.02);}
@@ -77,8 +74,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .badge-in{background:rgba(42,92,58,.4);color:#4caf72;border:1px solid rgba(42,92,58,.6);}
 .badge-order{background:rgba(180,120,0,.2);color:#c8a84b;border:1px solid rgba(180,120,0,.4);}
 .badge-out{background:rgba(180,40,40,.2);color:#e05050;border:1px solid rgba(180,40,40,.4);}
-.badge-active{background:rgba(42,92,58,.3);color:#4caf72;}
-.badge-inactive{background:rgba(180,40,40,.2);color:#e05050;}
+.badge-active{background:rgba(42,92,58,.3);color:#4caf72;border:1px solid rgba(42,92,58,.5);}
+.badge-inactive{background:rgba(180,40,40,.2);color:#e05050;border:1px solid rgba(180,40,40,.4);}
 
 /* MODAL */
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(8px);}
@@ -86,7 +83,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .modal{background:#1e1e24;border:1px solid #2a2a32;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;position:relative;}
 .modal-head{padding:24px;border-bottom:1px solid #2a2a32;display:flex;justify-content:space-between;align-items:center;}
 .modal-title{font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.modal-close{background:none;border:none;color:#7a7a8c;font-size:24px;cursor:pointer;transition:color .2s;}
+.modal-close{background:none;border:none;color:#7a7a8c;font-size:24px;cursor:pointer;transition:color .2s;line-height:1;}
 .modal-close:hover{color:#fff;}
 .modal-body{padding:24px;}
 .modal-foot{padding:16px 24px;border-top:1px solid #2a2a32;display:flex;gap:8px;justify-content:flex-end;}
@@ -99,239 +96,221 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .form-select option{background:#1e1e24;}
 .form-textarea{resize:vertical;min-height:80px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.form-hint{font-size:11px;color:#7a7a8c;margin-top:4px;}
 
 /* TOAST */
 .toast{position:fixed;bottom:32px;right:32px;background:#fff;color:#0e0e10;padding:12px 20px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;z-index:9000;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.error{background:#e05050;color:#fff;}
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty-state{padding:60px;text-align:center;color:#7a7a8c;}
-.empty-state-icon{font-size:48px;margin-bottom:16px;opacity:.3;}
-.empty-state-text{font-size:13px;letter-spacing:2px;text-transform:uppercase;}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.3;}
+.empty-text{font-size:13px;letter-spacing:2px;text-transform:uppercase;}
 
-/* PROMO TABLE */
+/* PROMO CODE */
 .promo-code{font-family:monospace;font-size:14px;color:#c8a84b;letter-spacing:1px;}
 
-/* TOGGLE */
-.toggle{position:relative;width:40px;height:22px;display:inline-block;}
-.toggle input{opacity:0;width:0;height:0;}
-.toggle-slider{position:absolute;inset:0;background:#2a2a32;border-radius:22px;cursor:pointer;transition:.3s;}
-.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#7a7a8c;border-radius:50%;transition:.3s;}
-.toggle input:checked + .toggle-slider{background:rgba(42,92,58,.6);}
-.toggle input:checked + .toggle-slider:before{transform:translateX(18px);background:#4caf72;}
+/* ACTIONS */
+.actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+@media(max-width:900px){
+  .sidebar{width:200px;}
+  .main{margin-left:200px;padding:20px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:640px){
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
-    <div class="login-box">
-        <div class="login-logo">Mithril</div>
-        <div class="login-sub">Панель администратора</div>
-        <label class="login-label">Пароль</label>
-        <input type="password" class="login-input" id="passwordInput" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')login()">
-        <button class="login-btn" onclick="login()">Войти</button>
-        <div class="login-error" id="loginError">Неверный пароль</div>
-    </div>
+  <div class="login-box">
+    <div class="login-logo">Mithril</div>
+    <div class="login-sub">Панель администратора</div>
+    <label class="login-label">Пароль</label>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Войти</button>
+    <div class="login-error" id="loginError">Неверный пароль</div>
+  </div>
 </div>
 
-<!-- ADMIN LAYOUT -->
+<!-- ADMIN -->
 <div class="admin-layout" id="adminLayout">
-    <div class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-text">Mithril</div>
-            <div class="sidebar-sub">Admin Panel</div>
-        </div>
-        <div class="sidebar-nav">
-            <div class="nav-item active" onclick="showPage('dashboard')"><span class="nav-item-icon">📊</span> Дашборд</div>
-            <div class="nav-item" onclick="showPage('products')"><span class="nav-item-icon">📦</span> Товары</div>
-            <div class="nav-item" onclick="showPage('promos')"><span class="nav-item-icon">🎟</span> Промокоды</div>
-            <div class="nav-item" onclick="showPage('orders')"><span class="nav-item-icon">🛒</span> Заказы</div>
-        </div>
-        <div class="sidebar-footer">
-            <button class="logout-btn" onclick="logout()">Выйти</button>
-        </div>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-text">Mithril</div>
+      <div class="sidebar-sub">Admin Panel</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span>📊</span> Дашборд</div>
+      <div class="nav-item" onclick="showPage('products',this)"><span>📦</span> Товары</div>
+      <div class="nav-item" onclick="showPage('promos',this)"><span>🎟</span> Промокоды</div>
+      <div class="nav-item" onclick="showPage('orders',this)"><span>🛒</span> Заказы</div>
+    </div>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">Выйти</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div><div class="page-title">Дашборд</div><div class="page-subtitle">Обзор магазина Mithril Sport</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statProducts">0</div><div class="stat-label">Товаров</div></div>
+        <div class="stat-card"><div class="stat-num" id="statInStock">0</div><div class="stat-label">В наличии</div></div>
+        <div class="stat-card"><div class="stat-num" id="statPromos">0</div><div class="stat-label">Промокодов</div></div>
+        <div class="stat-card"><div class="stat-num" id="statOrders">0</div><div class="stat-label">Заказов</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar"><span style="font-size:12px;color:#7a7a8c;letter-spacing:1px;text-transform:uppercase;">Последние товары</span></div>
+        <table><thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Наличие</th></tr></thead>
+        <tbody id="dashTable"><tr><td colspan="4"><div class="empty-state"><div class="empty-text">Загрузка...</div></div></td></tr></tbody></table>
+      </div>
     </div>
 
-    <div class="main">
-        <!-- DASHBOARD -->
-        <div class="page active" id="page-dashboard">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Дашборд</div>
-                    <div class="page-subtitle">Обзор магазина Mithril Sport</div>
-                </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-card-num" id="statProducts">0</div><div class="stat-card-label">Товаров</div></div>
-                <div class="stat-card"><div class="stat-card-num" id="statInStock">0</div><div class="stat-card-label">В наличии</div></div>
-                <div class="stat-card"><div class="stat-card-num" id="statPromos">0</div><div class="stat-card-label">Промокодов</div></div>
-                <div class="stat-card"><div class="stat-card-num" id="statOrders">0</div><div class="stat-card-label">Заказов</div></div>
-            </div>
-            <div class="table-wrap">
-                <div class="table-toolbar"><span style="font-size:12px;color:#7a7a8c;letter-spacing:1px;text-transform:uppercase;">Последние товары</span></div>
-                <table>
-                    <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Наличие</th></tr></thead>
-                    <tbody id="dashProductsTable"><tr><td colspan="4"><div class="empty-state"><div class="empty-state-text">Загрузка...</div></div></td></tr></tbody>
-                </table>
-            </div>
+    <!-- PRODUCTS -->
+    <div class="page" id="page-products">
+      <div class="page-header">
+        <div><div class="page-title">Товары</div><div class="page-subtitle">Управление каталогом</div></div>
+        <button class="btn btn-primary" onclick="openProductModal()">+ Добавить товар</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input type="text" class="search-box" placeholder="Поиск товара..." oninput="filterProducts(this.value)">
+          <span id="productsCount" style="font-size:12px;color:#7a7a8c;"></span>
         </div>
-
-        <!-- PRODUCTS -->
-        <div class="page" id="page-products">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Товары</div>
-                    <div class="page-subtitle">Управление каталогом</div>
-                </div>
-                <button class="btn btn-primary" onclick="openProductModal()">+ Добавить товар</button>
-            </div>
-            <div class="table-wrap">
-                <div class="table-toolbar">
-                    <input type="text" class="search-input" placeholder="Поиск товара..." oninput="filterProductsTable(this.value)">
-                    <span id="productsCount" style="font-size:12px;color:#7a7a8c;"></span>
-                </div>
-                <table>
-                    <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Наличие</th><th>Бейдж</th><th>Действия</th></tr></thead>
-                    <tbody id="productsTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- PROMOS -->
-        <div class="page" id="page-promos">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Промокоды</div>
-                    <div class="page-subtitle">Управление скидками</div>
-                </div>
-                <button class="btn btn-primary" onclick="openPromoModal()">+ Добавить промокод</button>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Код</th><th>Скидка</th><th>Статус</th><th>Использований</th><th>Действия</th></tr></thead>
-                    <tbody id="promosTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ORDERS -->
-        <div class="page" id="page-orders">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Заказы</div>
-                    <div class="page-subtitle">История заказов из Telegram</div>
-                </div>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>#</th><th>Клиент</th><th>Телефон</th><th>Товары</th><th>Дата</th><th>Статус</th></tr></thead>
-                    <tbody id="ordersTable"><tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🛒</div><div class="empty-state-text">Заказы появятся здесь</div></div></td></tr></tbody>
-                </table>
-            </div>
-        </div>
+        <table><thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Наличие</th><th>Бейдж</th><th>Действия</th></tr></thead>
+        <tbody id="productsTable"></tbody></table>
+      </div>
     </div>
+
+    <!-- PROMOS -->
+    <div class="page" id="page-promos">
+      <div class="page-header">
+        <div><div class="page-title">Промокоды</div><div class="page-subtitle">Управление скидками</div></div>
+        <button class="btn btn-primary" onclick="openPromoModal()">+ Добавить промокод</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Код</th><th>Скидка</th><th>Статус</th><th>Описание</th><th>Действия</th></tr></thead>
+        <tbody id="promosTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="page-orders">
+      <div class="page-header">
+        <div><div class="page-title">Заказы</div><div class="page-subtitle">История заказов</div></div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>#</th><th>Клиент</th><th>Телефон</th><th>Адрес</th><th>Товары</th><th>Дата</th><th>Статус</th></tr></thead>
+        <tbody id="ordersTable"></tbody></table>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- PRODUCT MODAL -->
-<div class="modal-backdrop" id="productModal" onclick="closeModalOutside(event,'productModal')">
-    <div class="modal">
-        <div class="modal-head">
-            <div class="modal-title" id="productModalTitle">Добавить товар</div>
-            <button class="modal-close" onclick="closeModal('productModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" id="productId">
-            <div class="form-group"><label class="form-label">Название товара</label><input type="text" class="form-input" id="productName" placeholder="Олимпийская штанга"></div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Категория</label>
-                    <select class="form-select" id="productCat">
-                        <option value="силовые">Силовые</option>
-                        <option value="кардио">Кардио</option>
-                        <option value="веса">Свободные веса</option>
-                        <option value="аксессуары">Аксессуары</option>
-                    </select>
-                </div>
-                <div class="form-group"><label class="form-label">Цена ($)</label><input type="text" class="form-input" id="productPrice" placeholder="0"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Наличие</label>
-                    <select class="form-select" id="productAvail">
-                        <option value="in">В наличии</option>
-                        <option value="order">Под заказ</option>
-                        <option value="out">Нет в наличии</option>
-                    </select>
-                </div>
-                <div class="form-group"><label class="form-label">Бейдж (необязательно)</label><input type="text" class="form-input" id="productBadge" placeholder="Хит / Новинка / Топ"></div>
-            </div>
-            <div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="productDesc" placeholder="Описание товара..."></textarea></div>
-            <div class="form-group"><label class="form-label">Характеристики (по одной в строке, формат: Вес: 20 кг)</label><textarea class="form-textarea" id="productSpecs" placeholder="Вес: 20 кг&#10;Длина: 220 см&#10;Покрытие: Хром&#10;Гарантия: 3 года"></textarea></div>
-        </div>
-        <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeModal('productModal')">Отмена</button>
-            <button class="btn btn-primary" onclick="saveProduct()">Сохранить</button>
-        </div>
+<div class="modal-backdrop" id="productModal" onclick="if(event.target===this)closeModal('productModal')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="productModalTitle">Добавить товар</div>
+      <button class="modal-close" onclick="closeModal('productModal')">&times;</button>
     </div>
+    <div class="modal-body">
+      <input type="hidden" id="editProductId">
+      <div class="form-group"><label class="form-label">Название товара</label><input type="text" class="form-input" id="pName" placeholder="Олимпийская штанга"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Категория</label>
+          <select class="form-select" id="pCat">
+            <option value="силовые">Силовые</option>
+            <option value="кардио">Кардио</option>
+            <option value="веса">Свободные веса</option>
+            <option value="аксессуары">Аксессуары</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Цена ($)</label><input type="text" class="form-input" id="pPrice" placeholder="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Наличие</label>
+          <select class="form-select" id="pAvail">
+            <option value="in">В наличии</option>
+            <option value="order">Под заказ</option>
+            <option value="out">Нет в наличии</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Бейдж (необязательно)</label><input type="text" class="form-input" id="pBadge" placeholder="Хит / Новинка / Топ"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="pDesc" placeholder="Описание товара..."></textarea></div>
+      <div class="form-group">
+        <label class="form-label">Характеристики (формат: Вес: 20 кг — каждая с новой строки)</label>
+        <textarea class="form-textarea" id="pSpecs" placeholder="Вес: 20 кг&#10;Длина: 220 см&#10;Покрытие: Хром&#10;Гарантия: 3 года"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('productModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveProduct()">Сохранить</button>
+    </div>
+  </div>
 </div>
 
 <!-- PROMO MODAL -->
-<div class="modal-backdrop" id="promoModal" onclick="closeModalOutside(event,'promoModal')">
-    <div class="modal">
-        <div class="modal-head">
-            <div class="modal-title" id="promoModalTitle">Добавить промокод</div>
-            <button class="modal-close" onclick="closeModal('promoModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" id="promoId">
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">Промокод</label><input type="text" class="form-input" id="promoCode" placeholder="MITHRIL20" style="text-transform:uppercase;"></div>
-                <div class="form-group"><label class="form-label">Скидка (%)</label><input type="number" class="form-input" id="promoDiscount" placeholder="20" min="1" max="100"></div>
-            </div>
-            <div class="form-group"><label class="form-label">Статус</label>
-                <select class="form-select" id="promoActive">
-                    <option value="true">Активен</option>
-                    <option value="false">Отключён</option>
-                </select>
-            </div>
-            <div class="form-group"><label class="form-label">Описание (необязательно)</label><input type="text" class="form-input" id="promoDesc" placeholder="Летняя акция"></div>
-        </div>
-        <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeModal('promoModal')">Отмена</button>
-            <button class="btn btn-primary" onclick="savePromo()">Сохранить</button>
-        </div>
+<div class="modal-backdrop" id="promoModal" onclick="if(event.target===this)closeModal('promoModal')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="promoModalTitle">Добавить промокод</div>
+      <button class="modal-close" onclick="closeModal('promoModal')">&times;</button>
     </div>
+    <div class="modal-body">
+      <input type="hidden" id="editPromoId">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Промокод</label><input type="text" class="form-input" id="prCode" placeholder="MITHRIL20" style="text-transform:uppercase;"></div>
+        <div class="form-group"><label class="form-label">Скидка (%)</label><input type="number" class="form-input" id="prDiscount" placeholder="20" min="1" max="100"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Статус</label>
+        <select class="form-select" id="prActive">
+          <option value="true">Активен</option>
+          <option value="false">Отключён</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Описание (необязательно)</label><input type="text" class="form-input" id="prDesc" placeholder="Летняя акция"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('promoModal')">Отмена</button>
+      <button class="btn btn-primary" onclick="savePromo()">Сохранить</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
+const db = getFirestore(initializeApp({
     apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
     authDomain: "mithril-shop-b2b0b.firebaseapp.com",
     projectId: "mithril-shop-b2b0b",
     storageBucket: "mithril-shop-b2b0b.firebasestorage.app",
     messagingSenderId: "182146848633",
     appId: "1:182146848633:web:28ae1250a08ccd053c81a8"
-};
+}));
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ── GLOBALS ──
-const ADMIN_PASSWORD = 'mithril2024';
+const PASS = 'mithril2024';
 let products = [], promos = [], orders = [];
-let editingProductId = null, editingPromoId = null;
 
 // ── LOGIN ──
-window.login = function() {
-    const pw = document.getElementById('passwordInput').value;
-    if(pw === ADMIN_PASSWORD) {
+window.login = () => {
+    if (document.getElementById('passwordInput').value === PASS) {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('adminLayout').style.display = 'flex';
         loadAll();
@@ -339,292 +318,263 @@ window.login = function() {
         document.getElementById('loginError').style.display = 'block';
         document.getElementById('passwordInput').value = '';
     }
-}
-
-window.logout = function() {
+};
+window.logout = () => {
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('adminLayout').style.display = 'none';
     document.getElementById('passwordInput').value = '';
-}
+};
+document.getElementById('passwordInput').focus();
 
-// ── NAVIGATION ──
-window.showPage = function(name) {
+// ── NAV ──
+window.showPage = (name, el) => {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-'+name).classList.add('active');
-    event.currentTarget.classList.add('active');
-}
+    document.getElementById('page-' + name).classList.add('active');
+    el.classList.add('active');
+};
 
-// ── LOAD ALL ──
+// ── LOAD ──
 async function loadAll() {
     await loadProducts();
     await loadPromos();
     loadOrders();
-    updateDashboard();
 }
 
 // ── PRODUCTS ──
 async function loadProducts() {
-    const snap = await getDocs(collection(db, 'products'));
-    products = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    renderProductsTable();
-    updateDashboard();
-}
-
-function renderProductsTable() {
-    const tbody = document.getElementById('productsTable');
-    document.getElementById('productsCount').textContent = products.length + ' товаров';
-    if(!products.length) {
-        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📦</div><div class="empty-state-text">Нет товаров. Добавьте первый!</div></div></td></tr>';
-        return;
-    }
-    tbody.innerHTML = products.map(p => `
-        <tr>
-            <td><strong>${p.name}</strong></td>
-            <td><span style="color:#7a7a8c;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${p.cat}</span></td>
-            <td>${p.price ? '$'+p.price : '0$'}</td>
-            <td>${availBadge(p.avail)}</td>
-            <td>${p.badge ? `<span class="badge badge-order">${p.badge}</span>` : '—'}</td>
-            <td style="display:flex;gap:8px;">
-                <button class="btn btn-ghost" style="padding:6px 12px;font-size:10px;" onclick="editProduct('${p.id}')">✏️ Изменить</button>
-                <button class="btn btn-danger" style="padding:6px 12px;font-size:10px;" onclick="deleteProduct('${p.id}')">🗑 Удалить</button>
-            </td>
-        </tr>`).join('');
+    try {
+        const snap = await getDocs(collection(db, 'products'));
+        products = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        renderProducts();
+        updateDash();
+    } catch(e) { showToast('Ошибка загрузки товаров', true); }
 }
 
 function availBadge(a) {
-    if(a==='in') return '<span class="badge badge-in">● В наличии</span>';
-    if(a==='order') return '<span class="badge badge-order">● Под заказ</span>';
+    if (a === 'in') return '<span class="badge badge-in">● В наличии</span>';
+    if (a === 'order') return '<span class="badge badge-order">● Под заказ</span>';
     return '<span class="badge badge-out">● Нет в наличии</span>';
 }
 
-window.filterProductsTable = function(q) {
-    const filtered = products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+function renderProducts(list) {
+    list = list || products;
     const tbody = document.getElementById('productsTable');
-    if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#7a7a8c;">Ничего не найдено</td></tr>'; return; }
-    document.getElementById('productsCount').textContent = filtered.length + ' товаров';
-    tbody.innerHTML = filtered.map(p => `
+    document.getElementById('productsCount').textContent = list.length + ' товаров';
+    if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">Нет товаров. Добавьте первый!</div></div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map(p => `
         <tr>
-            <td><strong>${p.name}</strong></td>
-            <td><span style="color:#7a7a8c;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${p.cat}</span></td>
-            <td>${p.price ? '$'+p.price : '0$'}</td>
+            <td><strong>${p.name || ''}</strong></td>
+            <td style="color:#7a7a8c;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${p.cat || ''}</td>
+            <td>${p.price && p.price !== '0' ? '$' + p.price : '0$'}</td>
             <td>${availBadge(p.avail)}</td>
             <td>${p.badge ? `<span class="badge badge-order">${p.badge}</span>` : '—'}</td>
-            <td style="display:flex;gap:8px;">
+            <td><div class="actions">
                 <button class="btn btn-ghost" style="padding:6px 12px;font-size:10px;" onclick="editProduct('${p.id}')">✏️ Изменить</button>
                 <button class="btn btn-danger" style="padding:6px 12px;font-size:10px;" onclick="deleteProduct('${p.id}')">🗑 Удалить</button>
-            </td>
+            </div></td>
         </tr>`).join('');
 }
 
-window.openProductModal = function() {
-    editingProductId = null;
+window.filterProducts = q => {
+    const f = products.filter(p => (p.name || '').toLowerCase().includes(q.toLowerCase()));
+    renderProducts(f);
+};
+
+window.openProductModal = () => {
     document.getElementById('productModalTitle').textContent = 'Добавить товар';
-    document.getElementById('productId').value = '';
-    document.getElementById('productName').value = '';
-    document.getElementById('productCat').value = 'силовые';
-    document.getElementById('productPrice').value = '';
-    document.getElementById('productAvail').value = 'in';
-    document.getElementById('productBadge').value = '';
-    document.getElementById('productDesc').value = '';
-    document.getElementById('productSpecs').value = '';
+    document.getElementById('editProductId').value = '';
+    ['pName','pPrice','pBadge','pDesc','pSpecs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pCat').value = 'силовые';
+    document.getElementById('pAvail').value = 'in';
     openModal('productModal');
-}
+};
 
-window.editProduct = function(id) {
+window.editProduct = id => {
     const p = products.find(x => x.id === id);
-    if(!p) return;
-    editingProductId = id;
+    if (!p) return;
     document.getElementById('productModalTitle').textContent = 'Изменить товар';
-    document.getElementById('productName').value = p.name || '';
-    document.getElementById('productCat').value = p.cat || 'силовые';
-    document.getElementById('productPrice').value = p.price || '';
-    document.getElementById('productAvail').value = p.avail || 'in';
-    document.getElementById('productBadge').value = p.badge || '';
-    document.getElementById('productDesc').value = p.desc || '';
-    document.getElementById('productSpecs').value = p.specs ? p.specs.map(s=>s.l+': '+s.v).join('\n') : '';
+    document.getElementById('editProductId').value = id;
+    document.getElementById('pName').value = p.name || '';
+    document.getElementById('pCat').value = p.cat || 'силовые';
+    document.getElementById('pPrice').value = p.price || '';
+    document.getElementById('pAvail').value = p.avail || 'in';
+    document.getElementById('pBadge').value = p.badge || '';
+    document.getElementById('pDesc').value = p.desc || '';
+    document.getElementById('pSpecs').value = (p.specs || []).map(s => s.l + ': ' + s.v).join('\n');
     openModal('productModal');
-}
+};
 
-window.saveProduct = async function() {
-    const name = document.getElementById('productName').value.trim();
-    if(!name) { showToast('Введите название товара', true); return; }
-    const specsRaw = document.getElementById('productSpecs').value.trim();
-    const specs = specsRaw ? specsRaw.split('\n').filter(l=>l.trim()).map(l => {
-        const [l1,...rest] = l.split(':');
-        return {l: l1.trim(), v: rest.join(':').trim()};
+window.saveProduct = async () => {
+    const name = document.getElementById('pName').value.trim();
+    if (!name) { showToast('Введите название товара', true); return; }
+    const specsRaw = document.getElementById('pSpecs').value.trim();
+    const specs = specsRaw ? specsRaw.split('\n').filter(l => l.trim()).map(l => {
+        const idx = l.indexOf(':');
+        return {l: l.slice(0, idx).trim(), v: l.slice(idx + 1).trim()};
     }) : [];
     const data = {
         name,
-        cat: document.getElementById('productCat').value,
-        price: document.getElementById('productPrice').value.trim() || '0',
-        avail: document.getElementById('productAvail').value,
-        badge: document.getElementById('productBadge').value.trim(),
-        desc: document.getElementById('productDesc').value.trim(),
+        cat: document.getElementById('pCat').value,
+        price: document.getElementById('pPrice').value.trim() || '0',
+        avail: document.getElementById('pAvail').value,
+        badge: document.getElementById('pBadge').value.trim() || null,
+        desc: document.getElementById('pDesc').value.trim(),
         specs
     };
+    const editId = document.getElementById('editProductId').value;
     try {
-        if(editingProductId) {
-            await updateDoc(doc(db,'products',editingProductId), data);
-            showToast('Товар обновлён!');
-        } else {
-            await addDoc(collection(db,'products'), data);
-            showToast('Товар добавлен!');
-        }
+        if (editId) { await updateDoc(doc(db, 'products', editId), data); showToast('Товар обновлён!'); }
+        else { await addDoc(collection(db, 'products'), data); showToast('Товар добавлен!'); }
         closeModal('productModal');
         await loadProducts();
-    } catch(e) { showToast('Ошибка: '+e.message, true); }
-}
+    } catch(e) { showToast('Ошибка: ' + e.message, true); }
+};
 
-window.deleteProduct = async function(id) {
-    if(!confirm('Удалить товар?')) return;
+window.deleteProduct = async id => {
+    if (!confirm('Удалить товар?')) return;
     try {
-        await deleteDoc(doc(db,'products',id));
+        await deleteDoc(doc(db, 'products', id));
         showToast('Товар удалён');
         await loadProducts();
-    } catch(e) { showToast('Ошибка: '+e.message, true); }
-}
+    } catch(e) { showToast('Ошибка: ' + e.message, true); }
+};
 
 // ── PROMOS ──
 async function loadPromos() {
-    const snap = await getDocs(collection(db,'promos'));
-    promos = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    renderPromosTable();
-    updateDashboard();
+    try {
+        const snap = await getDocs(collection(db, 'promos'));
+        promos = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        renderPromos();
+        updateDash();
+    } catch(e) { showToast('Ошибка загрузки промокодов', true); }
 }
 
-function renderPromosTable() {
+function renderPromos() {
     const tbody = document.getElementById('promosTable');
-    if(!promos.length) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">🎟</div><div class="empty-state-text">Нет промокодов</div></div></td></tr>';
+    if (!promos.length) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">🎟</div><div class="empty-text">Нет промокодов</div></div></td></tr>';
         return;
     }
     tbody.innerHTML = promos.map(p => `
         <tr>
-            <td><span class="promo-code">${p.code}</span>${p.desc ? `<div style="font-size:11px;color:#7a7a8c;margin-top:2px;">${p.desc}</div>` : ''}</td>
-            <td><strong>${p.discount}%</strong></td>
-            <td><span class="badge ${p.active==='true'||p.active===true ? 'badge-active':'badge-inactive'}">${p.active==='true'||p.active===true ? '✓ Активен':'✗ Выключен'}</span></td>
-            <td>—</td>
-            <td style="display:flex;gap:8px;">
+            <td><span class="promo-code">${p.code || ''}</span></td>
+            <td><strong>${p.discount || 0}%</strong></td>
+            <td><span class="badge ${p.active === 'true' || p.active === true ? 'badge-active' : 'badge-inactive'}">${p.active === 'true' || p.active === true ? '✓ Активен' : '✗ Выключен'}</span></td>
+            <td style="color:#7a7a8c;">${p.desc || '—'}</td>
+            <td><div class="actions">
                 <button class="btn btn-ghost" style="padding:6px 12px;font-size:10px;" onclick="editPromo('${p.id}')">✏️ Изменить</button>
                 <button class="btn btn-danger" style="padding:6px 12px;font-size:10px;" onclick="deletePromo('${p.id}')">🗑 Удалить</button>
-            </td>
+            </div></td>
         </tr>`).join('');
 }
 
-window.openPromoModal = function() {
-    editingPromoId = null;
+window.openPromoModal = () => {
     document.getElementById('promoModalTitle').textContent = 'Добавить промокод';
-    document.getElementById('promoCode').value = '';
-    document.getElementById('promoDiscount').value = '';
-    document.getElementById('promoActive').value = 'true';
-    document.getElementById('promoDesc').value = '';
+    document.getElementById('editPromoId').value = '';
+    ['prCode','prDiscount','prDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('prActive').value = 'true';
     openModal('promoModal');
-}
+};
 
-window.editPromo = function(id) {
+window.editPromo = id => {
     const p = promos.find(x => x.id === id);
-    if(!p) return;
-    editingPromoId = id;
+    if (!p) return;
     document.getElementById('promoModalTitle').textContent = 'Изменить промокод';
-    document.getElementById('promoCode').value = p.code || '';
-    document.getElementById('promoDiscount').value = p.discount || '';
-    document.getElementById('promoActive').value = String(p.active);
-    document.getElementById('promoDesc').value = p.desc || '';
+    document.getElementById('editPromoId').value = id;
+    document.getElementById('prCode').value = p.code || '';
+    document.getElementById('prDiscount').value = p.discount || '';
+    document.getElementById('prActive').value = String(p.active);
+    document.getElementById('prDesc').value = p.desc || '';
     openModal('promoModal');
-}
+};
 
-window.savePromo = async function() {
-    const code = document.getElementById('promoCode').value.trim().toUpperCase();
-    const discount = document.getElementById('promoDiscount').value.trim();
-    if(!code || !discount) { showToast('Заполните код и скидку', true); return; }
+window.savePromo = async () => {
+    const code = document.getElementById('prCode').value.trim().toUpperCase();
+    const discount = document.getElementById('prDiscount').value.trim();
+    if (!code || !discount) { showToast('Заполните код и скидку', true); return; }
     const data = {
         code,
         discount: parseInt(discount),
-        active: document.getElementById('promoActive').value,
-        desc: document.getElementById('promoDesc').value.trim()
+        active: document.getElementById('prActive').value,
+        desc: document.getElementById('prDesc').value.trim()
     };
+    const editId = document.getElementById('editPromoId').value;
     try {
-        if(editingPromoId) {
-            await updateDoc(doc(db,'promos',editingPromoId), data);
-            showToast('Промокод обновлён!');
-        } else {
-            await addDoc(collection(db,'promos'), data);
-            showToast('Промокод добавлен!');
-        }
+        if (editId) { await updateDoc(doc(db, 'promos', editId), data); showToast('Промокод обновлён!'); }
+        else { await addDoc(collection(db, 'promos'), data); showToast('Промокод добавлен!'); }
         closeModal('promoModal');
         await loadPromos();
-    } catch(e) { showToast('Ошибка: '+e.message, true); }
-}
+    } catch(e) { showToast('Ошибка: ' + e.message, true); }
+};
 
-window.deletePromo = async function(id) {
-    if(!confirm('Удалить промокод?')) return;
+window.deletePromo = async id => {
+    if (!confirm('Удалить промокод?')) return;
     try {
-        await deleteDoc(doc(db,'promos',id));
+        await deleteDoc(doc(db, 'promos', id));
         showToast('Промокод удалён');
         await loadPromos();
-    } catch(e) { showToast('Ошибка: '+e.message, true); }
-}
+    } catch(e) { showToast('Ошибка: ' + e.message, true); }
+};
 
 // ── ORDERS ──
 function loadOrders() {
     try {
         orders = JSON.parse(localStorage.getItem('mithril_orders') || '[]');
-        renderOrdersTable();
-        updateDashboard();
     } catch(e) { orders = []; }
+    renderOrders();
+    updateDash();
 }
 
-function renderOrdersTable() {
+function renderOrders() {
     const tbody = document.getElementById('ordersTable');
-    if(!orders.length) {
-        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🛒</div><div class="empty-state-text">Заказы появятся здесь</div></div></td></tr>';
+    if (!orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🛒</div><div class="empty-text">Заказов пока нет</div></div></td></tr>';
         return;
     }
     tbody.innerHTML = [...orders].reverse().map(o => `
         <tr>
-            <td><span style="color:#c8a84b;font-family:monospace;">#${o.id}</span></td>
-            <td>${o.fio || o.items?.[0]?.name || '—'}</td>
+            <td><span style="color:#c8a84b;font-family:monospace;">#${o.id || ''}</span></td>
+            <td>${o.fio || '—'}</td>
             <td>${o.phone || '—'}</td>
-            <td style="max-width:200px;">${o.items ? o.items.map(i=>i.name+' ×'+i.qty).join(', ') : '—'}</td>
+            <td style="max-width:160px;font-size:12px;color:#7a7a8c;">${o.address || '—'}</td>
+            <td style="max-width:180px;font-size:12px;">${(o.items || []).map(i => i.name + ' ×' + i.qty).join(', ') || '—'}</td>
             <td style="color:#7a7a8c;font-size:12px;">${o.date || '—'}</td>
             <td><span class="badge badge-active">✓ Оформлен</span></td>
         </tr>`).join('');
 }
 
 // ── DASHBOARD ──
-function updateDashboard() {
+function updateDash() {
     document.getElementById('statProducts').textContent = products.length;
-    document.getElementById('statInStock').textContent = products.filter(p=>p.avail==='in').length;
+    document.getElementById('statInStock').textContent = products.filter(p => p.avail === 'in').length;
     document.getElementById('statPromos').textContent = promos.length;
     document.getElementById('statOrders').textContent = orders.length;
-    const tbody = document.getElementById('dashProductsTable');
-    if(!products.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-text">Нет товаров</div></div></td></tr>'; return; }
-    tbody.innerHTML = products.slice(0,5).map(p=>`
+    const tbody = document.getElementById('dashTable');
+    if (!products.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-text">Нет товаров</div></div></td></tr>'; return; }
+    tbody.innerHTML = products.slice(0, 5).map(p => `
         <tr>
-            <td><strong>${p.name}</strong></td>
-            <td><span style="color:#7a7a8c;font-size:11px;text-transform:uppercase;">${p.cat}</span></td>
-            <td>${p.price ? '$'+p.price : '0$'}</td>
+            <td><strong>${p.name || ''}</strong></td>
+            <td style="color:#7a7a8c;font-size:11px;text-transform:uppercase;">${p.cat || ''}</td>
+            <td>${p.price && p.price !== '0' ? '$' + p.price : '0$'}</td>
             <td>${availBadge(p.avail)}</td>
         </tr>`).join('');
 }
 
-// ── MODAL HELPERS ──
-window.openModal = function(id) { document.getElementById(id).classList.add('open'); }
-window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); }
-window.closeModalOutside = function(e, id) { if(e.target===document.getElementById(id)) closeModal(id); }
+// ── HELPERS ──
+window.openModal = id => document.getElementById(id).classList.add('open');
+window.closeModal = id => document.getElementById(id).classList.remove('open');
 
-// ── TOAST ──
-function showToast(msg, isError=false) {
+function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast' + (isError ? ' error' : '');
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
 }
-
-// ── INIT ──
-document.getElementById('passwordInput').focus();
 </script>
 </body>
 </html>
