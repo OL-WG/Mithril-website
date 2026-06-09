@@ -249,6 +249,22 @@ tr:hover td{background:rgba(255,255,255,.02);}
         </div>
         <div class="form-group"><label class="form-label">Бейдж (необязательно)</label><input type="text" class="form-input" id="pBadge" placeholder="Хит / Новинка / Топ"></div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Фото товара</label>
+        <input type="hidden" id="pImg">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div id="imgPreview" style="width:120px;height:120px;background:#0e0e10;border:1px dashed #2a2a32;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;border-radius:2px;">🖼</div>
+          <div style="flex:1;">
+            <label class="upload-label" id="uploadLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:1px solid #2a2a32;background:#0e0e10;color:#7a7a8c;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-bottom:8px;">
+              <span id="uploadIcon">📁</span>
+              <span id="uploadText">Выбрать файл</span>
+              <input type="file" id="pImgFile" accept="image/*" style="display:none;" onchange="handleImageUpload(this)">
+            </label>
+            <div id="uploadProgress" style="display:none;font-size:12px;color:#c8a84b;letter-spacing:1px;">⏳ Загрузка...</div>
+            <div style="font-size:11px;color:#7a7a8c;line-height:1.5;">JPG, PNG, WEBP до 10MB.<br>Фото сразу появится на сайте.</div>
+          </div>
+        </div>
+      </div>
       <div class="form-group"><label class="form-label">Описание</label><textarea class="form-textarea" id="pDesc" placeholder="Описание товара..."></textarea></div>
       <div class="form-group">
         <label class="form-label">Характеристики (формат: Вес: 20 кг — каждая с новой строки)</label>
@@ -326,6 +342,62 @@ window.logout = () => {
 };
 document.getElementById('passwordInput').focus();
 
+// Cloudinary upload
+const CLOUD_NAME = 'dtmk3txvx';
+const UPLOAD_PRESET = 'aahkrdjm';
+
+window.handleImageUpload = async function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const preview = document.getElementById('imgPreview');
+    const progress = document.getElementById('uploadProgress');
+    const uploadText = document.getElementById('uploadText');
+    const uploadIcon = document.getElementById('uploadIcon');
+    
+    // Show loading
+    progress.style.display = 'block';
+    uploadText.textContent = 'Загружается...';
+    uploadIcon.textContent = '⏳';
+    
+    // Preview locally first
+    const reader = new FileReader();
+    reader.onload = e => {
+        preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;opacity:0.5;">`;
+    };
+    reader.readAsDataURL(file);
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('folder', 'mithril-products');
+        
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        
+        if (data.secure_url) {
+            document.getElementById('pImg').value = data.secure_url;
+            preview.innerHTML = `<img src="${data.secure_url}" style="width:100%;height:100%;object-fit:cover;">`;
+            progress.style.display = 'none';
+            uploadText.textContent = '✓ Загружено';
+            uploadIcon.textContent = '✅';
+            showToast('Фото загружено!');
+        } else {
+            throw new Error(data.error?.message || 'Upload failed');
+        }
+    } catch(e) {
+        progress.style.display = 'none';
+        uploadText.textContent = 'Ошибка загрузки';
+        uploadIcon.textContent = '❌';
+        showToast('Ошибка: ' + e.message, true);
+        console.error('Upload error:', e);
+    }
+};
+
 // ── NAV ──
 window.showPage = (name, el) => {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -387,7 +459,12 @@ window.filterProducts = q => {
 window.openProductModal = () => {
     document.getElementById('productModalTitle').textContent = 'Добавить товар';
     document.getElementById('editProductId').value = '';
-    ['pName','pPrice','pBadge','pDesc','pSpecs'].forEach(id => document.getElementById(id).value = '');
+    ['pName','pPrice','pBadge','pDesc','pSpecs','pImg'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('imgPreview').innerHTML = '🖼';
+    document.getElementById('uploadText').textContent = 'Выбрать файл';
+    document.getElementById('uploadIcon').textContent = '📁';
+    document.getElementById('pImgFile').value = '';
+    document.getElementById('uploadProgress').style.display = 'none';
     document.getElementById('pCat').value = 'силовые';
     document.getElementById('pAvail').value = 'in';
     openModal('productModal');
@@ -405,6 +482,12 @@ window.editProduct = id => {
     document.getElementById('pBadge').value = p.badge || '';
     document.getElementById('pDesc').value = p.desc || '';
     document.getElementById('pSpecs').value = (p.specs || []).map(s => s.l + ': ' + s.v).join('\n');
+    document.getElementById('pImg').value = p.img || '';
+    const prev = document.getElementById('imgPreview');
+    prev.innerHTML = p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;">` : '🖼';
+    document.getElementById('uploadText').textContent = p.img ? '✓ Фото есть' : 'Выбрать файл';
+    document.getElementById('uploadIcon').textContent = p.img ? '✅' : '📁';
+    document.getElementById('uploadProgress').style.display = 'none';
     openModal('productModal');
 };
 
@@ -423,7 +506,8 @@ window.saveProduct = async () => {
         avail: document.getElementById('pAvail').value,
         badge: document.getElementById('pBadge').value.trim() || null,
         desc: document.getElementById('pDesc').value.trim(),
-        specs
+        specs,
+        img: document.getElementById('pImg').value.trim() || null
     };
     const editId = document.getElementById('editProductId').value;
     try {
