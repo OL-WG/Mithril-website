@@ -552,6 +552,44 @@ window.addEventListener('hashchange', () => {
 // ── INIT ──
 showSkeletons();
 
+
+// ── EXPORT TO WINDOW (needed for ES module onclick handlers) ──
+window.showMain = showMain;
+window.showCatalog = showCatalog;
+window.showFavPage = showFavPage;
+window.showHistoryPage = showHistoryPage;
+window.showComparePage = showComparePage;
+window.openProductPage = openProductPage;
+window.ppBuy = ppBuy;
+window.ppCart = ppCart;
+window.filterBy = filterBy;
+window.searchProducts = searchProducts;
+window.toggleCart = toggleCart;
+window.toggleChat = toggleChat;
+window.toggleTheme = toggleTheme;
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
+window.toggleLangMenu = toggleLangMenu;
+window.setLang = setLang;
+window.addToCart = addToCart;
+window.buyNow = buyNow;
+window.changeQty = changeQty;
+window.toggleFav = toggleFav;
+window.addToCompare = addToCompare;
+window.removeFromCompare = removeFromCompare;
+window.clearCompare = clearCompare;
+window.openOrderForm = openOrderForm;
+window.closeOrderForm = closeOrderForm;
+window.applyPromo = applyPromo;
+window.submitOrder = submitOrder;
+window.calcDelivery = calcDelivery;
+window.sendChat = sendChat;
+window.acceptCookie = acceptCookie;
+window.declineCookie = declineCookie;
+window.renderProducts = renderProducts;
+window.getFiltered = getFiltered;
+window.showSkeletons = showSkeletons;
+
 // ── FIREBASE ──
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
