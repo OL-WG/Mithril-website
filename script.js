@@ -154,9 +154,10 @@ function renderProducts(list) {
     grid.innerHTML = list.map(p => `
         <div class="product-card">
             <div class="product-img-wrap">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </div>
+                ${p.img
+                    ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;filter:grayscale(20%);transition:filter .5s;" onmouseover="this.style.filter='grayscale(0%)'" onmouseout="this.style.filter='grayscale(20%)'">` 
+                    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+                }
                 ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
                 <button class="fav-btn ${favorites.has(p.id) ? 'active' : ''}" onclick="toggleFav('${p.id}',event)">${favorites.has(p.id) ? '♥' : '♡'}</button>
                 <div class="product-overlay">
@@ -235,6 +236,10 @@ function openProductPage(id) {
     document.getElementById('ppDesc').textContent = p.desc || '';
     document.getElementById('ppPrice').textContent = p.price && p.price !== '0' ? '$' + p.price : '0$';
     document.getElementById('ppAvail').innerHTML = getAvailBadge(p.avail);
+    const ppImg = document.getElementById('ppImg');
+    ppImg.innerHTML = p.img
+        ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
     document.getElementById('ppSpecs').innerHTML = (p.specs || []).map(s => `<div class="spec-item"><div class="spec-label">${s.l}</div><div class="spec-value">${s.v}</div></div>`).join('');
     // Recommendations
     const recs = products.filter(x => x.id !== id && x.cat === p.cat).slice(0, 3);
@@ -314,7 +319,7 @@ function renderFavPage() {
     grid.innerHTML = favProds.map(p => `
         <div class="product-card">
             <div class="product-img-wrap">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;filter:grayscale(20%);">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
                 ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
                 <button class="fav-btn active" onclick="toggleFav('${p.id}',event)">♥</button>
                 <div class="product-overlay"><button class="overlay-btn" onclick="openProductPage('${p.id}')">${t('more')}</button></div>
