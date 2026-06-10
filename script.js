@@ -122,6 +122,16 @@ function closeMobileMenu() {
 const revObs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
+// ── SALE CHECK ──
+function isOnSale(p) {
+    const b = window._bannerDiscount;
+    if (!b) return false;
+    if (b.applyType === 'all') return true;
+    if (b.applyType === 'category') return p.cat === b.category;
+    if (b.applyType === 'specific') return (b.applyProducts || []).includes(p.id);
+    return false;
+}
+
 // ── AVAIL BADGE ──
 function getAvailBadge(avail) {
     if (avail === 'in') return `<span class="avail-badge avail-in">● ${t('avail_in')}</span>`;
@@ -171,7 +181,13 @@ function renderProducts(list) {
                     <div class="product-cat">${p.cat}</div>
                     <div style="margin-top:6px;">${getAvailBadge(p.avail)}</div>
                 </div>
-                <div class="product-price">${p.price && p.price !== '0' ? '$' + p.price : '0$'}</div>
+                <div>
+                    ${window._bannerDiscount && window._bannerDiscount.discount > 0 && isOnSale(p) ? `
+                        <div style="font-size:10px;color:#e05050;text-decoration:line-through;letter-spacing:1px;">${p.price && p.price !== '0' ? '$'+p.price : '0$'}</div>
+                        <div class="product-price" style="color:#4caf72;">$${p.price && p.price !== '0' ? (p.price * (1 - window._bannerDiscount.discount/100)).toFixed(0) : '0'}</div>
+                        <span style="background:#e05050;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;">-${window._bannerDiscount.discount}%</span>
+                    ` : `<div class="product-price">${p.price && p.price !== '0' ? '$'+p.price : '0$'}</div>`}
+                </div>
             </div>
             <div class="product-actions">
                 <button class="action-btn-buy" onclick="buyNow('${p.id}')">${t('buy')}</button>
@@ -326,7 +342,13 @@ function renderFavPage() {
             </div>
             <div class="product-info">
                 <div><div class="product-name">${p.name}</div><div class="product-cat">${p.cat}</div><div style="margin-top:6px;">${getAvailBadge(p.avail)}</div></div>
-                <div class="product-price">${p.price && p.price !== '0' ? '$' + p.price : '0$'}</div>
+                <div>
+                    ${window._bannerDiscount && window._bannerDiscount.discount > 0 && isOnSale(p) ? `
+                        <div style="font-size:10px;color:#e05050;text-decoration:line-through;letter-spacing:1px;">${p.price && p.price !== '0' ? '$'+p.price : '0$'}</div>
+                        <div class="product-price" style="color:#4caf72;">$${p.price && p.price !== '0' ? (p.price * (1 - window._bannerDiscount.discount/100)).toFixed(0) : '0'}</div>
+                        <span style="background:#e05050;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;">-${window._bannerDiscount.discount}%</span>
+                    ` : `<div class="product-price">${p.price && p.price !== '0' ? '$'+p.price : '0$'}</div>`}
+                </div>
             </div>
             <div class="product-actions">
                 <button class="action-btn-buy" onclick="buyNow('${p.id}')">${t('buy')}</button>
@@ -633,9 +655,31 @@ const _db = getFirestore(initializeApp({
                             const textEl = banner.querySelector('.promo-text');
                             if (textEl) textEl.textContent = b.text;
                         }
+                        // Timer with custom deadline
                         if (b.timer === false) {
-                            const timerEl = banner.querySelector('#tH');
-                            if (timerEl) timerEl.closest('div').style.display = 'none';
+                            const timerWrap = document.querySelector('.promo-inner > div:last-child');
+                            if (timerWrap) timerWrap.style.display = 'none';
+                        } else if (b.deadline) {
+                            // Override updateTimer with custom deadline
+                            clearInterval(window._timerInterval);
+                            window._timerInterval = setInterval(() => {
+                                const diff = b.deadline - Date.now();
+                                if (diff <= 0) { clearInterval(window._timerInterval); return; }
+                                const days = Math.floor(diff / 86400000);
+                                const h = Math.floor((diff % 86400000) / 3600000);
+                                const m = Math.floor((diff % 3600000) / 60000);
+                                const s = Math.floor((diff % 60000) / 1000);
+                                const tH = document.getElementById('tH');
+                                const tM = document.getElementById('tM');
+                                const tS = document.getElementById('tS');
+                                if (tH) tH.textContent = days > 0 ? days + 'д ' + String(h).padStart(2,'0') : String(h).padStart(2,'0');
+                                if (tM) tM.textContent = String(m).padStart(2,'0');
+                                if (tS) tS.textContent = String(s).padStart(2,'0');
+                            }, 1000);
+                        }
+                        // Apply discounts to products
+                        if (b.discount && b.discount > 0) {
+                            window._bannerDiscount = b;
                         }
                     }
                 }
