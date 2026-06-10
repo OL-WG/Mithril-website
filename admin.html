@@ -150,6 +150,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="nav-item" onclick="showPage('products',this)"><span>📦</span> Товары</div>
       <div class="nav-item" onclick="showPage('promos',this)"><span>🎟</span> Промокоды</div>
       <div class="nav-item" onclick="showPage('orders',this)"><span>🛒</span> Заказы</div>
+      <div class="nav-item" onclick="showPage('banners',this)"><span>📢</span> Баннер акции</div>
     </div>
     <div class="sidebar-footer">
       <button class="logout-btn" onclick="logout()">Выйти</button>
@@ -212,6 +213,64 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="table-wrap">
         <table><thead><tr><th>#</th><th>Клиент</th><th>Телефон</th><th>Адрес</th><th>Товары</th><th>Дата</th><th>Статус</th></tr></thead>
         <tbody id="ordersTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- BANNERS -->
+    <div class="page" id="page-banners">
+      <div class="page-header">
+        <div><div class="page-title">Баннер акции</div><div class="page-subtitle">Управление акционной полосой вверху сайта</div></div>
+        <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить</button>
+      </div>
+
+      <!-- PREVIEW -->
+      <div style="margin-bottom:24px;">
+        <div style="font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Предпросмотр</div>
+        <div id="bannerPreview" style="background:#c8a84b;color:#0e0e10;padding:13px 24px;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;border-radius:2px;">
+          <span id="previewText" style="font-family:sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">🔥 Летняя акция — скидка 20% на всё кардио-оборудование</span>
+          <div id="previewTimer" style="display:flex;align-items:center;gap:4px;font-family:monospace;font-size:18px;font-weight:700;">
+            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
+            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
+            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="padding:24px;">
+        <div class="form-group">
+          <label class="form-label">Статус баннера</label>
+          <select class="form-select" id="bannerActive" onchange="updatePreview()">
+            <option value="true">✅ Показывать на сайте</option>
+            <option value="false">❌ Скрыть с сайта</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Текст акции</label>
+          <input type="text" class="form-input" id="bannerText" placeholder="🔥 Летняя акция — скидка 20% на всё кардио-оборудование" oninput="updatePreview()">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Таймер обратного отсчёта</label>
+            <select class="form-select" id="bannerTimer" onchange="updatePreview()">
+              <option value="true">✅ Показывать таймер</option>
+              <option value="false">❌ Скрыть таймер</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Цвет фона баннера</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="color" id="bannerColor" value="#c8a84b" oninput="updatePreview()" style="width:48px;height:40px;border:1px solid #2a2a32;background:none;cursor:pointer;padding:2px;">
+              <input type="text" class="form-input" id="bannerColorHex" value="#c8a84b" oninput="syncColor()" style="flex:1;" placeholder="#c8a84b">
+            </div>
+          </div>
+        </div>
+        <div style="padding:16px;background:#0e0e10;border:1px solid #2a2a32;border-radius:2px;">
+          <div style="font-size:11px;color:#7a7a8c;letter-spacing:1px;margin-bottom:8px;">💡 Подсказка</div>
+          <div style="font-size:13px;color:#7a7a8c;line-height:1.6;">
+            После сохранения баннер обновится на сайте автоматически.<br>
+            Можно скрыть баннер когда акция закончится — просто выберите "Скрыть с сайта".
+          </div>
+        </div>
       </div>
     </div>
 
@@ -311,7 +370,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db = getFirestore(initializeApp({
     apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
@@ -412,6 +471,7 @@ async function loadAll() {
     await loadProducts();
     await loadPromos();
     loadOrders();
+    await loadBanner();
 }
 
 // ── PRODUCTS ──
@@ -652,6 +712,55 @@ function updateDash() {
 // ── HELPERS ──
 window.openModal = id => document.getElementById(id).classList.add('open');
 window.closeModal = id => document.getElementById(id).classList.remove('open');
+
+// ── BANNER ──
+async function loadBanner() {
+    try {
+        const snap = await getDocs(collection(db, 'settings'));
+        const bannerDoc = snap.docs.find(d => d.id === 'banner');
+        if (bannerDoc) {
+            const b = bannerDoc.data();
+            document.getElementById('bannerText').value = b.text || '';
+            document.getElementById('bannerActive').value = String(b.active !== false);
+            document.getElementById('bannerTimer').value = String(b.timer !== false);
+            document.getElementById('bannerColor').value = b.color || '#c8a84b';
+            document.getElementById('bannerColorHex').value = b.color || '#c8a84b';
+            updatePreview();
+        }
+    } catch(e) { console.log('Banner load error:', e); }
+}
+
+window.saveBanner = async () => {
+    const data = {
+        text: document.getElementById('bannerText').value.trim(),
+        active: document.getElementById('bannerActive').value === 'true',
+        timer: document.getElementById('bannerTimer').value === 'true',
+        color: document.getElementById('bannerColor').value
+    };
+    try {
+        await setDoc(doc(db, 'settings', 'banner'), data);
+        showToast('Баннер сохранён! Сайт обновится автоматически.');
+    } catch(e) { showToast('Ошибка: ' + e.message, true); }
+};
+
+window.updatePreview = () => {
+    const text = document.getElementById('bannerText').value || '🔥 Летняя акция — скидка 20%';
+    const color = document.getElementById('bannerColor').value;
+    const showTimer = document.getElementById('bannerTimer').value === 'true';
+    const active = document.getElementById('bannerActive').value === 'true';
+    document.getElementById('previewText').textContent = text;
+    document.getElementById('bannerPreview').style.background = color;
+    document.getElementById('bannerPreview').style.opacity = active ? '1' : '0.4';
+    document.getElementById('previewTimer').style.display = showTimer ? 'flex' : 'none';
+};
+
+window.syncColor = () => {
+    const hex = document.getElementById('bannerColorHex').value;
+    if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+        document.getElementById('bannerColor').value = hex;
+        updatePreview();
+    }
+};
 
 function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
