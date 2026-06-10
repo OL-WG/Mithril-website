@@ -220,55 +220,128 @@ tr:hover td{background:rgba(255,255,255,.02);}
     <div class="page" id="page-banners">
       <div class="page-header">
         <div><div class="page-title">Баннер акции</div><div class="page-subtitle">Управление акционной полосой вверху сайта</div></div>
-        <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить</button>
+        <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить изменения</button>
       </div>
 
       <!-- PREVIEW -->
       <div style="margin-bottom:24px;">
-        <div style="font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Предпросмотр</div>
+        <div style="font-size:10px;color:#7a7a8c;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Предпросмотр баннера</div>
         <div id="bannerPreview" style="background:#c8a84b;color:#0e0e10;padding:13px 24px;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;border-radius:2px;">
-          <span id="previewText" style="font-family:sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">🔥 Летняя акция — скидка 20% на всё кардио-оборудование</span>
+          <span id="previewText" style="font-family:sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">🔥 Акция</span>
           <div id="previewTimer" style="display:flex;align-items:center;gap:4px;font-family:monospace;font-size:18px;font-weight:700;">
-            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
-            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
-            <span style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>
+            <span id="ptD" style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;display:none;">00д</span>
+            <span id="ptH" style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
+            <span id="ptM" style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>:
+            <span id="ptS" style="background:rgba(0,0,0,.15);padding:3px 10px;border-radius:3px;">00</span>
           </div>
         </div>
       </div>
 
-      <div class="table-wrap" style="padding:24px;">
-        <div class="form-group">
-          <label class="form-label">Статус баннера</label>
-          <select class="form-select" id="bannerActive" onchange="updatePreview()">
-            <option value="true">✅ Показывать на сайте</option>
-            <option value="false">❌ Скрыть с сайта</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Текст акции</label>
-          <input type="text" class="form-input" id="bannerText" placeholder="🔥 Летняя акция — скидка 20% на всё кардио-оборудование" oninput="updatePreview()">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Таймер обратного отсчёта</label>
-            <select class="form-select" id="bannerTimer" onchange="updatePreview()">
-              <option value="true">✅ Показывать таймер</option>
-              <option value="false">❌ Скрыть таймер</option>
-            </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- LEFT COL -->
+        <div>
+          <div class="table-wrap" style="padding:24px;margin-bottom:20px;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c8a84b;margin-bottom:16px;">⚙️ Основные настройки</div>
+            <div class="form-group">
+              <label class="form-label">Статус баннера</label>
+              <select class="form-select" id="bannerActive" onchange="updatePreview()">
+                <option value="true">✅ Показывать на сайте</option>
+                <option value="false">❌ Скрыть с сайта</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Текст акции</label>
+              <input type="text" class="form-input" id="bannerText" placeholder="🔥 Летняя акция — скидка 20%" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Процент скидки (%)</label>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <input type="number" class="form-input" id="bannerDiscount" placeholder="20" min="1" max="99" style="width:100px;" oninput="updateBannerText()">
+                <span style="font-size:12px;color:#7a7a8c;">— автоматически подставится в текст</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Цвет фона</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="bannerColor" value="#c8a84b" oninput="updatePreview()" style="width:48px;height:40px;border:1px solid #2a2a32;background:none;cursor:pointer;padding:2px;">
+                <input type="text" class="form-input" id="bannerColorHex" value="#c8a84b" oninput="syncColor()" style="flex:1;" placeholder="#c8a84b">
+                <div style="display:flex;gap:6px;">
+                  <div onclick="setColor('#c8a84b')" style="width:28px;height:28px;background:#c8a84b;border-radius:2px;cursor:pointer;border:2px solid transparent;" title="Золотой"></div>
+                  <div onclick="setColor('#e05050')" style="width:28px;height:28px;background:#e05050;border-radius:2px;cursor:pointer;border:2px solid transparent;" title="Красный"></div>
+                  <div onclick="setColor('#2a5c8a')" style="width:28px;height:28px;background:#2a5c8a;border-radius:2px;cursor:pointer;border:2px solid transparent;" title="Синий"></div>
+                  <div onclick="setColor('#2a5c3a')" style="width:28px;height:28px;background:#2a5c3a;border-radius:2px;cursor:pointer;border:2px solid transparent;" title="Зелёный"></div>
+                  <div onclick="setColor('#1e1e24')" style="width:28px;height:28px;background:#1e1e24;border-radius:2px;cursor:pointer;border:2px solid #555;" title="Тёмный"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Цвет фона баннера</label>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <input type="color" id="bannerColor" value="#c8a84b" oninput="updatePreview()" style="width:48px;height:40px;border:1px solid #2a2a32;background:none;cursor:pointer;padding:2px;">
-              <input type="text" class="form-input" id="bannerColorHex" value="#c8a84b" oninput="syncColor()" style="flex:1;" placeholder="#c8a84b">
+
+          <!-- TIMER -->
+          <div class="table-wrap" style="padding:24px;">
+            <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c8a84b;margin-bottom:16px;">⏱ Таймер обратного отсчёта</div>
+            <div class="form-group">
+              <label class="form-label">Показывать таймер</label>
+              <select class="form-select" id="bannerTimer" onchange="updatePreview()">
+                <option value="true">✅ Да, показывать</option>
+                <option value="false">❌ Нет, скрыть</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Дата и время окончания акции</label>
+              <input type="datetime-local" class="form-input" id="bannerDeadline" oninput="updatePreview()">
+              <div style="font-size:11px;color:#7a7a8c;margin-top:6px;">Можно поставить дату хоть на месяц вперёд</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;">
+              <button class="btn btn-ghost" style="padding:8px;font-size:10px;" onclick="setDeadline(1)">+1 день</button>
+              <button class="btn btn-ghost" style="padding:8px;font-size:10px;" onclick="setDeadline(3)">+3 дня</button>
+              <button class="btn btn-ghost" style="padding:8px;font-size:10px;" onclick="setDeadline(7)">+7 дней</button>
+              <button class="btn btn-ghost" style="padding:8px;font-size:10px;" onclick="setDeadline(30)">+30 дней</button>
             </div>
           </div>
         </div>
-        <div style="padding:16px;background:#0e0e10;border:1px solid #2a2a32;border-radius:2px;">
-          <div style="font-size:11px;color:#7a7a8c;letter-spacing:1px;margin-bottom:8px;">💡 Подсказка</div>
-          <div style="font-size:13px;color:#7a7a8c;line-height:1.6;">
-            После сохранения баннер обновится на сайте автоматически.<br>
-            Можно скрыть баннер когда акция закончится — просто выберите "Скрыть с сайта".
+
+        <!-- RIGHT COL -->
+        <div class="table-wrap" style="padding:24px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c8a84b;margin-bottom:16px;">🏷 На какие товары распространяется акция</div>
+          <div class="form-group">
+            <label class="form-label">Тип применения</label>
+            <select class="form-select" id="bannerApplyType" onchange="updateApplyUI()">
+              <option value="all">Все товары</option>
+              <option value="category">Определённая категория</option>
+              <option value="specific">Выбранные товары</option>
+            </select>
+          </div>
+
+          <!-- Category selector -->
+          <div id="applyCategoryWrap" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Категория</label>
+              <select class="form-select" id="bannerCategory">
+                <option value="силовые">Силовые</option>
+                <option value="кардио">Кардио</option>
+                <option value="веса">Свободные веса</option>
+                <option value="аксессуары">Аксессуары</option>
+                <option value="армрестлинг">Армрестлинг</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Specific products selector -->
+          <div id="applyProductsWrap" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Выберите товары (можно несколько)</label>
+              <div id="productCheckboxes" style="max-height:300px;overflow-y:auto;border:1px solid #2a2a32;padding:12px;background:#0e0e10;display:flex;flex-direction:column;gap:8px;">
+                <div style="font-size:12px;color:#7a7a8c;">Загрузка товаров...</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="applyAllInfo" style="padding:16px;background:#0e0e10;border:1px solid #2a2a32;border-radius:2px;">
+            <div style="font-size:13px;color:#7a7a8c;line-height:1.6;">
+              Скидка будет применена ко всем товарам в каталоге.<br>
+              На карточках появится бейдж со скидкой.
+            </div>
           </div>
         </div>
       </div>
@@ -370,7 +443,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db = getFirestore(initializeApp({
     apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
@@ -714,28 +787,49 @@ window.openModal = id => document.getElementById(id).classList.add('open');
 window.closeModal = id => document.getElementById(id).classList.remove('open');
 
 // ── BANNER ──
+let previewTimerInterval = null;
+
 async function loadBanner() {
     try {
-        const snap = await getDocs(collection(db, 'settings'));
-        const bannerDoc = snap.docs.find(d => d.id === 'banner');
-        if (bannerDoc) {
-            const b = bannerDoc.data();
+        const bannerSnap = await getDoc(doc(db, 'settings', 'banner'));
+        if (bannerSnap.exists()) {
+            const b = bannerSnap.data();
             document.getElementById('bannerText').value = b.text || '';
             document.getElementById('bannerActive').value = String(b.active !== false);
             document.getElementById('bannerTimer').value = String(b.timer !== false);
             document.getElementById('bannerColor').value = b.color || '#c8a84b';
             document.getElementById('bannerColorHex').value = b.color || '#c8a84b';
+            document.getElementById('bannerDiscount').value = b.discount || '';
+            if (b.deadline) document.getElementById('bannerDeadline').value = new Date(b.deadline).toISOString().slice(0,16);
+            document.getElementById('bannerApplyType').value = b.applyType || 'all';
+            if (b.category) document.getElementById('bannerCategory').value = b.category;
+            updateApplyUI();
+            if (b.applyProducts) {
+                setTimeout(() => {
+                    b.applyProducts.forEach(id => {
+                        const cb = document.getElementById('cb_' + id);
+                        if (cb) cb.checked = true;
+                    });
+                }, 500);
+            }
             updatePreview();
         }
     } catch(e) { console.log('Banner load error:', e); }
 }
 
 window.saveBanner = async () => {
+    const applyType = document.getElementById('bannerApplyType').value;
+    const selectedProducts = [...document.querySelectorAll('#productCheckboxes input:checked')].map(cb => cb.value);
     const data = {
         text: document.getElementById('bannerText').value.trim(),
         active: document.getElementById('bannerActive').value === 'true',
         timer: document.getElementById('bannerTimer').value === 'true',
-        color: document.getElementById('bannerColor').value
+        color: document.getElementById('bannerColor').value,
+        discount: parseInt(document.getElementById('bannerDiscount').value) || 0,
+        deadline: document.getElementById('bannerDeadline').value ? new Date(document.getElementById('bannerDeadline').value).getTime() : null,
+        applyType,
+        category: document.getElementById('bannerCategory').value,
+        applyProducts: selectedProducts
     };
     try {
         await setDoc(doc(db, 'settings', 'banner'), data);
@@ -744,23 +838,84 @@ window.saveBanner = async () => {
 };
 
 window.updatePreview = () => {
-    const text = document.getElementById('bannerText').value || '🔥 Летняя акция — скидка 20%';
+    const text = document.getElementById('bannerText').value || '🔥 Акция';
     const color = document.getElementById('bannerColor').value;
     const showTimer = document.getElementById('bannerTimer').value === 'true';
     const active = document.getElementById('bannerActive').value === 'true';
+    const deadline = document.getElementById('bannerDeadline').value;
     document.getElementById('previewText').textContent = text;
     document.getElementById('bannerPreview').style.background = color;
     document.getElementById('bannerPreview').style.opacity = active ? '1' : '0.4';
     document.getElementById('previewTimer').style.display = showTimer ? 'flex' : 'none';
+    // Update preview timer
+    if (previewTimerInterval) clearInterval(previewTimerInterval);
+    if (showTimer && deadline) {
+        const tick = () => {
+            const diff = new Date(deadline) - new Date();
+            if (diff <= 0) { clearInterval(previewTimerInterval); return; }
+            const days = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            const dEl = document.getElementById('ptD');
+            if (days > 0) { dEl.style.display = 'inline'; dEl.textContent = days + 'д'; } else { dEl.style.display = 'none'; }
+            document.getElementById('ptH').textContent = String(h).padStart(2,'0');
+            document.getElementById('ptM').textContent = String(m).padStart(2,'0');
+            document.getElementById('ptS').textContent = String(s).padStart(2,'0');
+        };
+        tick();
+        previewTimerInterval = setInterval(tick, 1000);
+    }
+};
+
+window.updateBannerText = () => {
+    const disc = document.getElementById('bannerDiscount').value;
+    const applyType = document.getElementById('bannerApplyType').value;
+    const cat = document.getElementById('bannerCategory').value;
+    let target = 'все товары';
+    if (applyType === 'category') target = 'категорию ' + cat;
+    else if (applyType === 'specific') target = 'выбранные товары';
+    if (disc) document.getElementById('bannerText').value = `🔥 Скидка ${disc}% на ${target}`;
+    updatePreview();
 };
 
 window.syncColor = () => {
     const hex = document.getElementById('bannerColorHex').value;
-    if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-        document.getElementById('bannerColor').value = hex;
-        updatePreview();
-    }
+    if (/^#[0-9A-Fa-f]{6}$/.test(hex)) { document.getElementById('bannerColor').value = hex; updatePreview(); }
 };
+
+window.setColor = (color) => {
+    document.getElementById('bannerColor').value = color;
+    document.getElementById('bannerColorHex').value = color;
+    updatePreview();
+};
+
+window.setDeadline = (days) => {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    document.getElementById('bannerDeadline').value = d.toISOString().slice(0,16);
+    updatePreview();
+};
+
+window.updateApplyUI = () => {
+    const type = document.getElementById('bannerApplyType').value;
+    document.getElementById('applyCategoryWrap').style.display = type === 'category' ? 'block' : 'none';
+    document.getElementById('applyProductsWrap').style.display = type === 'specific' ? 'block' : 'none';
+    document.getElementById('applyAllInfo').style.display = type === 'all' ? 'block' : 'none';
+    if (type === 'specific') loadProductCheckboxes();
+    updateBannerText();
+};
+
+function loadProductCheckboxes() {
+    const wrap = document.getElementById('productCheckboxes');
+    if (!products.length) { wrap.innerHTML = '<div style="font-size:12px;color:#7a7a8c;">Нет товаров</div>'; return; }
+    wrap.innerHTML = products.map(p => `
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 0;border-bottom:1px solid #1e1e24;">
+            <input type="checkbox" id="cb_${p.id}" value="${p.id}" style="width:16px;height:16px;cursor:pointer;">
+            <span style="font-size:13px;">${p.name}</span>
+            <span style="font-size:11px;color:#7a7a8c;margin-left:auto;">${p.cat}</span>
+        </label>`).join('');
+}
 
 function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
