@@ -597,7 +597,7 @@ window.showSkeletons = showSkeletons;
 
 // ── FIREBASE ──
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const _db = getFirestore(initializeApp({
     apiKey: "AIzaSyCp9uHtABLNIM-4EDaqfqCwOMs1poQJumU",
@@ -616,6 +616,32 @@ const _db = getFirestore(initializeApp({
         }
         const promoSnap = await getDocs(collection(_db, 'promos'));
         if (!promoSnap.empty) dbPromos = promoSnap.docs.map(d => ({id: d.id, ...d.data()}));
+
+        // Load banner settings
+        try {
+            const bannerSnap = await getDoc(doc(_db, 'settings', 'banner'));
+            if (bannerSnap.exists()) {
+                const b = bannerSnap.data();
+                const banner = document.querySelector('.promo-banner');
+                if (banner) {
+                    if (b.active === false) {
+                        banner.style.display = 'none';
+                    } else {
+                        banner.style.display = 'block';
+                        if (b.color) banner.style.background = b.color;
+                        if (b.text) {
+                            const textEl = banner.querySelector('.promo-text');
+                            if (textEl) textEl.textContent = b.text;
+                        }
+                        if (b.timer === false) {
+                            const timerEl = banner.querySelector('#tH');
+                            if (timerEl) timerEl.closest('div').style.display = 'none';
+                        }
+                    }
+                }
+            }
+        } catch(e) { console.log('Banner error:', e); }
+
     } catch(e) {
         console.log('Firebase load error:', e);
     }
