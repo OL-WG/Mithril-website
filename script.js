@@ -132,6 +132,38 @@ function isOnSale(p) {
     return false;
 }
 
+// ── OPEN SALE PRODUCTS ──
+function openSaleProducts() {
+    const b = window._bannerDiscount;
+    hideAllPages();
+    document.getElementById('catalogPage').style.display = 'block';
+    window.location.hash = 'catalog';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+
+    showSkeletons();
+    setTimeout(() => {
+        // Filter only sale products
+        let saleProducts = products;
+        if (b) {
+            if (b.applyType === 'category') {
+                saleProducts = products.filter(p => p.cat === b.category);
+                // Set filter button active
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(b.category));
+                });
+                currentFilter = b.category;
+            } else if (b.applyType === 'specific') {
+                saleProducts = products.filter(p => (b.applyProducts || []).includes(p.id));
+                currentFilter = 'all';
+            } else {
+                currentFilter = 'all';
+                document.querySelectorAll('.filter-btn').forEach((btn,i) => btn.classList.toggle('active', i===0));
+            }
+        }
+        renderProducts(saleProducts);
+    }, 400);
+}
+
 // ── AVAIL BADGE ──
 function getAvailBadge(avail) {
     if (avail === 'in') return `<span class="avail-badge avail-in">● ${t('avail_in')}</span>`;
@@ -614,6 +646,7 @@ window.sendChat = sendChat;
 window.acceptCookie = acceptCookie;
 window.declineCookie = declineCookie;
 window.renderProducts = renderProducts;
+window.openSaleProducts = openSaleProducts;
 window.getFiltered = getFiltered;
 window.showSkeletons = showSkeletons;
 
