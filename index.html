@@ -23,7 +23,7 @@
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- BACK TO TOP -->
-<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="back-top" id="backTop" onclick="scrollToTopAnimated()" title="Наверх">↑</button>
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
@@ -119,10 +119,10 @@
 <section class="counters reveal">
   <div class="container">
     <div class="counters-grid">
-      <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Товаров в каталоге</div></div>
-      <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Довольных клиентов</div></div>
-      <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">На рынке</div></div>
-      <div class="counter-item"><div class="counter-num">0</div><div class="counter-label">Рекомендуют нас</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="0">0</div><div class="counter-label">Товаров в каталоге</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="0">0</div><div class="counter-label">Довольных клиентов</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="0">0</div><div class="counter-label">На рынке</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="0">0</div><div class="counter-label">Рекомендуют нас</div></div>
     </div>
   </div>
 </section>
@@ -257,6 +257,17 @@
     <button class="product-page-back" onclick="showMain()">← На главную</button>
     <div style="margin:24px 0 32px;"><div class="section-label">История</div><div class="section-title">История заказов</div></div>
     <div id="historyList"></div>
+  </div>
+</div>
+
+<!-- ════ 404 PAGE ════ -->
+<div id="page404" style="display:none;min-height:100vh;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:24px;text-align:center;padding:100px 24px 60px;">
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,20vw,200px);line-height:1;color:var(--border);letter-spacing:8px;">404</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--text);">Страница не найдена</div>
+  <p style="font-size:15px;color:var(--muted);max-width:400px;line-height:1.6;">Возможно, товар был удалён или ссылка устарела.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button onclick="showMain()" class="btn-primary" style="padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:2px solid #fff;background:#fff;color:#0e0e10;cursor:pointer;transition:all .3s;">На главную</button>
+    <button onclick="showCatalog()" class="btn-ghost" style="padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:2px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .3s;">В каталог</button>
   </div>
 </div>
 
@@ -410,6 +421,6 @@
 
 <div class="toast" id="toast"></div>
 
-<script type="module" src="script.js?v=8"></script>
+<script type="module" src="script.js?v=9"></script>
 </body>
 </html>
