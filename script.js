@@ -32,7 +32,15 @@ window.addEventListener('load', () => {
 // ── SCROLL ──
 window.addEventListener('scroll', () => {
     document.getElementById('header').classList.toggle('scrolled', scrollY > 60);
-    document.getElementById('backTop').classList.toggle('visible', scrollY > 400);
+    const backTop = document.getElementById('backTop');
+    if (backTop) {
+        if (scrollY > 400) {
+            backTop.classList.add('visible');
+            backTop.style.transform = 'translateY(0) rotate(0deg)';
+        } else {
+            backTop.classList.remove('visible');
+        }
+    }
     const el = document.getElementById('scrollProgress');
     if (el) el.style.width = (scrollY / (document.body.scrollHeight - innerHeight) * 100) + '%';
 });
@@ -88,7 +96,19 @@ function toggleTheme() {
     lm = !lm;
     document.body.classList.toggle('lm', lm);
     document.getElementById('themeBtn').textContent = lm ? '🌑' : '🌙';
+    localStorage.setItem('mithril_theme', lm ? 'light' : 'dark');
 }
+
+// Load saved theme on init
+(function() {
+    const saved = localStorage.getItem('mithril_theme');
+    if (saved === 'light') {
+        lm = true;
+        document.body.classList.add('lm');
+        const btn = document.getElementById('themeBtn');
+        if (btn) btn.textContent = '🌑';
+    }
+})();
 
 // ── LANG ──
 const LANGS = {
@@ -121,6 +141,34 @@ function closeMobileMenu() {
 // ── SCROLL REVEAL ──
 const revObs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ── ANIMATED COUNTERS ──
+function animateCounter(el, target, suffix) {
+    let start = 0;
+    const duration = 2000;
+    const step = 16;
+    const increment = target / (duration / step);
+    const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+            start = target;
+            clearInterval(timer);
+        }
+        el.textContent = Math.floor(start).toLocaleString('ru-RU') + (suffix || '');
+    }, step);
+}
+
+const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        if (target) animateCounter(el, target, suffix);
+        counterObs.unobserve(el);
+    });
+}, { threshold: 0.3 });
+document.querySelectorAll('.counter-num[data-target]').forEach(el => counterObs.observe(el));
 
 // ── SALE CHECK ──
 function isOnSale(p) {
@@ -590,6 +638,16 @@ function playClick() {
     } catch(e) {}
 }
 
+// ── SCROLL TO TOP ANIMATED ──
+function scrollToTopAnimated() {
+    const btn = document.getElementById('backTop');
+    if (btn) {
+        btn.style.transform = 'translateY(-8px) scale(1.15)';
+        setTimeout(() => { btn.style.transform = ''; }, 200);
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
 // ── TOAST ──
 function showToast(msg) {
     const t = document.getElementById('toast');
@@ -600,13 +658,27 @@ function showToast(msg) {
 // ── HASH ROUTING ──
 window.addEventListener('hashchange', () => {
     const hash = location.hash;
-    if (hash.startsWith('#product-')) openProductPage(hash.replace('#product-', ''));
+    if (hash.startsWith('#product-')) {
+        const id = hash.replace('#product-', '');
+        const p = products.find(x => x.id === id);
+        if (p) openProductPage(id);
+        else show404();
+    }
     else if (hash === '#catalog') showCatalog();
     else if (hash === '#favorites') showFavPage();
     else if (hash === '#history') showHistoryPage();
     else if (hash === '#compare') showComparePage();
+    else if (hash === '#404') show404();
     else showMain();
 });
+
+function show404() {
+    hideAllPages();
+    const page404 = document.getElementById('page404');
+    if (page404) page404.style.display = 'flex';
+    window.location.hash = '404';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
 
 // ── INIT ──
 showSkeletons();
@@ -647,6 +719,8 @@ window.acceptCookie = acceptCookie;
 window.declineCookie = declineCookie;
 window.renderProducts = renderProducts;
 window.openSaleProducts = openSaleProducts;
+window.show404 = show404;
+window.scrollToTopAnimated = scrollToTopAnimated;
 window.getFiltered = getFiltered;
 window.showSkeletons = showSkeletons;
 
@@ -718,6 +792,11 @@ const _db = getFirestore(initializeApp({
                 }
             }
         } catch(e) { console.log('Banner error:', e); }
+
+        // Update counters with real data
+        const counterEls = document.querySelectorAll('.counter-num[data-target]');
+        if (counterEls.length >= 1) counterEls[0].dataset.target = products.length;
+        if (counterEls.length >= 4) counterEls[3].dataset.target = products.length > 0 ? 98 : 0;
 
     } catch(e) {
         console.log('Firebase load error:', e);
